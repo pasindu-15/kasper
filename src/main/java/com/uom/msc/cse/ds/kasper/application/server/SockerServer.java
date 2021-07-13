@@ -1,6 +1,8 @@
 //package com.uom.msc.cse.ds.kasper.application.server;
 //
 //import java.io.BufferedReader;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
 //import java.io.PrintWriter;
 //import java.net.ServerSocket;
 //import java.net.Socket;
@@ -12,24 +14,34 @@
 //    private BufferedReader in;
 //
 //    public void start(int port) {
-//        serverSocket = new ServerSocket(port);
-//        clientSocket = serverSocket.accept();
-//        out = new PrintWriter(clientSocket.getOutputStream(), true);
-//        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//        String greeting = in.readLine();
-//        if ("hello server".equals(greeting)) {
-//            out.println("hello client");
+//        try {
+//            serverSocket = new ServerSocket(port);
+//            clientSocket = serverSocket.accept();
+//            out = new PrintWriter(clientSocket.getOutputStream(), true);
+//            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            String greeting = in.readLine();
+//            if ("hello server".equals(greeting)) {
+//                out.println("hello client");
+//            }
+//            else {
+//                out.println("unrecognised greeting");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-//        else {
-//            out.println("unrecognised greeting");
-//        }
+//
 //    }
 //
 //    public void stop() {
-//        in.close();
-//        out.close();
-//        clientSocket.close();
-//        serverSocket.close();
+//        try {
+//            in.close();
+//            out.close();
+//            clientSocket.close();
+//            serverSocket.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
 //    }
 //    public static void main(String[] args) {
 //        GreetServer server=new GreetServer();
