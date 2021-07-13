@@ -39,6 +39,10 @@ public class Node {
         this.port = assignPort();
         this.ipAddress = getIp();
 
+//        Ser
+//
+//        server.start(6666);
+
 //        } catch (Exception e){
 //            throw new RuntimeException("Could not find host address");
 //        }
