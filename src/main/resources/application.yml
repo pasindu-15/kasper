@@ -1,0 +1,15 @@
+server:
+  port: 8086
+base-url:
+  context: /best-deal/cloud-api/v1
+
+bootstrap:
+  bip: "127.0.0.1"
+  bport: 55555
+
+log:
+  identifierKey: UUID
+
+msce:
+
+
