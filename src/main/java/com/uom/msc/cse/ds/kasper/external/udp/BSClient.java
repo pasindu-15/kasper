@@ -1,4 +1,4 @@
-package com.uom.msc.cse.ds.kasper.application.init;
+package com.uom.msc.cse.ds.kasper.external.udp;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.util.Constants;
@@ -31,9 +31,9 @@ public class BSClient {
 
     private DatagramSocket datagramSocket;
 
-
-    private String BSIPAddress;
-    private int BSPort;
+//
+//    private String BSIPAddress;
+//    private int BSPort;
 
 
     public BSClient() throws IOException {

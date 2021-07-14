@@ -1,8 +1,9 @@
-package com.uom.msc.cse.ds.kasper.application.init;
+package com.uom.msc.cse.ds.kasper.application.service;
 
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.dto.RouteTable;
-import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
+import com.uom.msc.cse.ds.kasper.external.rest.RequestHandlerInterface;
+import com.uom.msc.cse.ds.kasper.external.udp.BSClient;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,6 @@ public class NodeHandler {
 
         if(targets != null) {
             for (InetSocketAddress target: targets) {
-                System.out.println("REP: "+target);
                 String ip = target.getAddress().toString().substring(1);
                 int port = target.getPort();
                 Node neighbourNode = new Node(ip,port);

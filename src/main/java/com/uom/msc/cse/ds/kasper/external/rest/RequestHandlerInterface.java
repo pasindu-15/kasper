@@ -1,4 +1,4 @@
-package com.uom.msc.cse.ds.kasper.external.request;
+package com.uom.msc.cse.ds.kasper.external.rest;
 
 import com.uom.msc.cse.ds.kasper.dto.Node;
 
