@@ -17,10 +17,14 @@ public class Node {
 
     private String userName;
     private String ipAddress;
+
+
     private int port;
 //    private MessageBroker messageBroker;
 //    private SearchManager searchManager;
 //    private FTPServer ftpServer;
+
+
 
 
     public Node(String ipAddress, int port) {
@@ -28,20 +32,20 @@ public class Node {
         this.port = port;
     }
 
-    public Node() throws Exception {
+    public Node(int port) throws Exception {
 //        this.bsClient = bsClient;
 
         String uniqueID = UUID.randomUUID().toString();
         this.userName = "node_"+uniqueID;
+        this.port = port;
 
 //        try{
 
-        this.port = assignPort();
+//        this.port = assignPort();
         this.ipAddress = getIp();
 
-//        Ser
-//
-//        server.start(6666);
+//        SocketServer server = new SocketServer(port);
+//        server.start();
 
 //        } catch (Exception e){
 //            throw new RuntimeException("Could not find host address");

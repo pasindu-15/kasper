@@ -2,11 +2,10 @@ package com.uom.msc.cse.ds.kasper.application.init;
 
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.dto.RouteTable;
+import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.undo.AbstractUndoableEdit;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -18,18 +17,20 @@ public class NodeHandler {
 
     Node node;
     BSClient bsClient;
-
-//    @Autowired
+    RequestHandlerInterface requestHandler;
     RouteTable routeTable;
 
-    public NodeHandler(BSClient bsClient,RouteTable routeTable) throws Exception {
+    public NodeHandler(BSClient bsClient, RouteTable routeTable, RequestHandlerInterface requestHandler) throws Exception {
         this.bsClient = bsClient;
         this.routeTable =routeTable;
-        this.node = new Node();
-        init();
+        this.requestHandler = requestHandler;
+
     }
 
-    private void init() {
+    public void init(int myPort) throws Exception {
+
+        this.node = new Node(myPort);
+
         List<Node> neighbours = new ArrayList<>();
         List<InetSocketAddress> targets = null;
         try {
@@ -42,8 +43,13 @@ public class NodeHandler {
         if(targets != null) {
             for (InetSocketAddress target: targets) {
                 System.out.println("REP: "+target);
-                neighbours.add(new Node(target.getAddress().toString(),target.getPort()));
-//                messageBroker.sendPing(target.getAddress().toString().substring(1), target.getPort());
+                String ip = target.getAddress().toString().substring(1);
+                int port = target.getPort();
+                Node neighbourNode = new Node(ip,port);
+                neighbours.add(neighbourNode);
+
+                requestHandler.ping(node,neighbourNode);
+
             }
             routeTable.setNeighbours(neighbours);
             System.out.println(routeTable.getNeighbours().toString());

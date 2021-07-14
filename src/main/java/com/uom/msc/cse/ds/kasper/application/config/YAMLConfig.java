@@ -24,5 +24,8 @@ public class YAMLConfig {
     @Value("${bootstrap.bport}")
     private int BSPort;
 
+    @Value("${node.req-url}")
+    private String url;
+
 
 }

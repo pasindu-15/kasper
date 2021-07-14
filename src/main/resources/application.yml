@@ -1,7 +1,7 @@
 server:
-  port: 8086
+  port: 0
 base-url:
-  context: /best-deal/cloud-api/v1
+  context: /kasper/v1
 
 bootstrap:
   bip: "127.0.0.1"
@@ -10,6 +10,7 @@ bootstrap:
 log:
   identifierKey: UUID
 
-msce:
+node:
+  req-url: "http://{ip}:{port}/${base-url.context}/node/"
 
 

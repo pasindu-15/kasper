@@ -27,17 +27,17 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .select().apis(RequestHandlerSelectors.basePackage("com.uom.msc.cse.sdoncloud.detection.application.controller"))
+                .select().apis(RequestHandlerSelectors.basePackage("com.uom.msc.cse.ds.kasper.application.controller"))
 //                .select().apis(RequestHandlerSelectors.basePackage("com.uom.msc.cse.sdoncloud.detection.application.function"))
                 .paths(regex("/.*"))
                 .build()
                 .apiInfo(apiInfo()).pathProvider(new BasePathAwareRelativePathProvider(context));
     }
     private ApiInfo apiInfo() {
-        String title ="Best Deal Application : Product Detection";
+        String title ="Kasper : File Sharing System";
         return new ApiInfo(
                 title,
-                "Welcome to Best Deal Application Platform",
+                "Welcome to the Kasper",
                 "v1.0",
                 "Terms of services",
                 new Contact("Admin", "http://www.bestdeal.com", "pasinduhewagamage15@gmail.com"),
