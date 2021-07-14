@@ -26,10 +26,10 @@ public class DownloadController {
         return "index";
     }
 
-    @PostMapping("/searchFile")
-    public String SearchFile(@Valid File file, BindingResult result, Model model) {
+    @PostMapping("/searchfile")
+    public String searchFile(File file, BindingResult result, Model model) {
         System.out.println(file.getName());
-        return "index";
+        return "redirect:/index";
 
     }
 
