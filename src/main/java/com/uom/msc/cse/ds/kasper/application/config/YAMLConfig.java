@@ -27,5 +27,10 @@ public class YAMLConfig {
     @Value("${node.req-url}")
     private String url;
 
+    @Value("${msg.ping}")
+    private String pingMsg;
+
+
+
 
 }

@@ -13,4 +13,7 @@ log:
 node:
   req-url: "http://{ip}:{port}/${base-url.context}/node/"
 
+msg:
+  ping: "PING {ip} {port}"
+
 
