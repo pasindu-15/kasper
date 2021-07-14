@@ -16,17 +16,26 @@ public class RequestHandler implements RequestHandlerInterface{
 
     @Autowired
     YAMLConfig yamlConfig;
-    public void ping(Node myNode, Node neighbourNode){
+    public void join(Node myNode, Node neighbourNode){
 
-        String msg = UriComponentsBuilder.fromPath(yamlConfig.getPingMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getJoinMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
 
         try{
             String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
         }catch (Exception e){
-            log.error("Failed to PING");
+            log.error("Failed to JOIN");
         }
 
+    }
+    public void leave(Node myNode, Node neighbourNode){
 
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getLeaveMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
+
+        try{
+            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+        }catch (Exception e){
+            log.error("Failed to LEAVE");
+        }
 
     }
 }

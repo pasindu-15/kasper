@@ -48,7 +48,7 @@ public class NodeHandler {
                 Node neighbourNode = new Node(ip,port);
                 neighbours.add(neighbourNode);
 
-                requestHandler.ping(node,neighbourNode);
+                requestHandler.join(node,neighbourNode);
 
             }
             routeTable.setNeighbours(neighbours);
@@ -58,16 +58,17 @@ public class NodeHandler {
 
 
     //
-//    public void unRegister() {
-//        try{
-//            this.bsClient.unRegister(this.userName, this.ipAddress, this.port);
-//            this.messageBroker.sendLeave();
-//
-//        } catch (IOException e) {
-//            LOG.severe("Un-Registering Gnode failed");
-//            e.printStackTrace();
-//        }
-//    }
+    public void unRegister() {
+        try{
+            this.bsClient.unRegister(this.node.getUserName(), this.node.getIpAddress(), this.node.getPort());
+
+            routeTable.getNeighbours().parallelStream().forEach(neighbour -> requestHandler.leave(node,neighbour));
+
+        } catch (IOException e) {
+            log.error("Un-Registering Node failed");
+            e.printStackTrace();
+        }
+    }
 //
 //    public int doSearch(String keyword){
 //        return this.searchManager.doSearch(keyword);

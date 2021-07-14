@@ -27,8 +27,11 @@ public class YAMLConfig {
     @Value("${node.req-url}")
     private String url;
 
-    @Value("${msg.ping}")
-    private String pingMsg;
+    @Value("${msg.join}")
+    private String joinMsg;
+
+    @Value("${msg.leave}")
+    private String leaveMsg;
 
 
 
