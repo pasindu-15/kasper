@@ -18,11 +18,8 @@ public class DomainFileSearch {
         //Check For Current Node
         boolean isFileInCurrentNode = fileStorage.isFileAvailable(serchFileName);
         if(isFileInCurrentNode) {
-            //Return Info to the Requester
-        } else {
-            //Call Neighbour
+            return true;
         }
-
         return false;
     }
 }

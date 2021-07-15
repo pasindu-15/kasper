@@ -17,4 +17,7 @@ msg:
   join: "JOIN {ip} {port}"
   leave: "LEAVE {ip} {port}"
 
+file-serch:
+  directCall: "Search"
+
 

@@ -28,6 +28,10 @@ public class NodeHandler {
 
     }
 
+    public Node getMyNode() throws Exception{
+        return this.node;
+    }
+
     public void init(int myPort) throws Exception {
 
         this.node = new Node(myPort);

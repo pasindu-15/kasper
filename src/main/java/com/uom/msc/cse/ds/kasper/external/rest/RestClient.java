@@ -1,6 +1,7 @@
 package com.uom.msc.cse.ds.kasper.external.rest;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
+import com.uom.msc.cse.ds.kasper.application.domain.inputdata.InputDataForFileSearch;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -10,6 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Service
 @Log4j2
@@ -29,6 +33,28 @@ public class RestClient {
         log.info("MSG SENT: {}",msg);
 
         String url = UriComponentsBuilder.fromHttpUrl(yamlConfig.getUrl()).buildAndExpand(ip,port).toString();
+
+
+        HttpEntity<?> entity = new HttpEntity<>(msg,headers);
+
+        String response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class).getBody();
+
+        return response;
+
+    }
+
+    public String  sendInputDataForFileSearch(String ip, String port, InputDataForFileSearch msg){
+
+        RestTemplate restTemplate = new RestTemplate();
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        log.info("MSG SENT: {}",msg);
+
+        String url = UriComponentsBuilder.fromHttpUrl(yamlConfig.getDirectCall()).buildAndExpand(ip,port).toString();
 
 
         HttpEntity<?> entity = new HttpEntity<>(msg,headers);
