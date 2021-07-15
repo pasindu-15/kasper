@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,7 +30,7 @@ public class UIController {
     }
 
     @PostMapping("/leave")
-    public String addUser(@Valid String msg, Model model) {
+    public String leaveClient(@Valid String msg, Model model) {
 
         nodeHandler.unRegAndLeave();
 
@@ -41,7 +40,7 @@ public class UIController {
     }
 
     @PostMapping("/search")
-    public String addUser(@Valid File file, BindingResult result, Model model) {
+    public String searchFile(@Valid File file, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "home";
         }
@@ -56,7 +55,19 @@ public class UIController {
         return "home";
 
     }
-    
+
+    @PostMapping("/download")
+    public String downloadFile(@Valid File fileDown, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "home";
+        }
+
+        System.out.println(fileDown.toString());
+        model.addAttribute("fileDownload", fileDown);
+        return "home";
+
+    }
+
 //    @GetMapping("/edit/{id}")
 //    public String showUpdateForm(@PathVariable("id") long id, Model model) {
 ////        File file = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid file Id:" + id));
@@ -85,3 +96,4 @@ public class UIController {
 //        return "redirect:/index";
 //    }
 }
+

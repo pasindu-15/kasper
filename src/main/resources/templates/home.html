@@ -1,84 +1,98 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Kasper : Welcome</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-        <link rel="stylesheet" href="../css/shards.min.css">
-    </head>
-    <body>
-    <body>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Kasper : Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/shards.min.css">
+</head>
+<body>
+<body>
+</body>
 
 
 <!--    <div th:switch="${files}" class="container my-5">-->
-        <div class="container my-5">
-            <div class="row">
-                <div class="col-md-10">
-                    <h2 class="mb-5"> Kasper : File Sharing System</h2>
-                </div>
-                <div class="col-md-2" align="right">
-                    <form action="#" th:action="@{/leave}" method="post">
-                        <input type="submit" class="btn btn-primary-red" value="Leave" >
-                    </form>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <form action="#" th:action="@{/search}" th:object="${file}" method="post">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="search-name" class="col-form-label">Search File</label>
-                                <div class="row">
-                                    <div class="form-group col-md-10">
-                                        <input type="search" th:field="*{name}" class="form-control" id="search-name" placeholder="Enter file name">
-                                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group col-md-2" align="right">
-                                        <input type="submit" class="btn btn-primary" value="Search">
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <table border="1" class="table table-striped table-responsive-md">
-                        <thead>
-                        <tr>
-                            <th>Search results</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <div>
-                            <tr th:each="file : ${files}">
-                                <td th:text="${file.name}"></td>
-                            </tr>
-                        </div>
-                        </tbody>
-                    </table>
-                    <form action="#" th:action="@{/download}" th:object="${file}" method="post">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="download-name" class="col-form-label">Download File</label>
-                                <div class="row">
-                                    <div class="form-group col-md-10">
-                                        <input type="search" th:field="*{name}" class="form-control" id="download-name" placeholder="Enter file name">
-                                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group col-md-2" align="right">
-                                        <input type="submit" class="btn btn-primary" value="Download">
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-10">
+            <h2 class="mb-5"> Kasper : File Sharing System</h2>
         </div>
-    </body>
+        <div class="col-md-2" align="right">
+            <form action="#" th:action="@{/leave}" method="post">
+                <input type="submit" class="btn btn-primary-red" value="Leave" >
+            </form>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="#" th:action="@{/search}" th:object="${file}" method="post">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="search-name" class="col-form-label">Search File</label>
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <input type="search" th:field="*{name}" class="form-control" id="search-name" placeholder="Enter file name">
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2" align="right">
+                                <input type="submit" class="btn btn-primary" value="Search">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table border="1" class="table table-striped table-responsive-md">
+                <thead>
+                <tr>
+                    <th>Search results</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div>
+                    <tr th:each="file : ${files}">
+                        <td th:text="${file.name}"></td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+            <form action="#" th:action="@{/download}" th:object="${file}" method="post">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="download-name" class="col-form-label">Download File</label>
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <input type="search" th:field="*{name}" class="form-control" id="download-name" placeholder="Enter file name">
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2" align="right">
+                                <input type="submit" class="btn btn-primary" value="Download">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <table border="1" class="table table-striped table-responsive-md">
+                <thead>
+                <tr>
+                    <th>Download update</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div>
+                    <tr th:each="fileD : ${fileDownload}">
+                        <td th:inline="text"  th:text="${fileD.name + ' file was downloaded' }">  </td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
 </html>
