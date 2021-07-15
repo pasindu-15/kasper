@@ -58,7 +58,7 @@ public class NodeHandler {
 
 
     //
-    public void unRegister() {
+    public void unRegAndLeave() {
         try{
             this.bsClient.unRegister(this.node.getUserName(), this.node.getIpAddress(), this.node.getPort());
 

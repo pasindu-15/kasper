@@ -110,7 +110,7 @@ public class BSClient {
                 log.error("Failed. There are errors in your command");
                 break;
             case 9998:
-                log.error("Failed, already registered to you, unRegister first");
+                log.error("Failed, already registered to you, unRegAndLeave first");
                 break;
             case 9997:
                 log.error("Failed, registered to another user, try a different IP and port");
