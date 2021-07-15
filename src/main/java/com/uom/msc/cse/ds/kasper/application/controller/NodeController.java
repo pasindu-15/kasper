@@ -57,7 +57,7 @@ public class NodeController {
 
         switch (command) {
             case "UNREG":
-                nodeHandler.unRegister();
+                nodeHandler.unRegAndLeave();
         }
 
         return ResponseEntity.status(HttpStatus.OK).body("OK");
