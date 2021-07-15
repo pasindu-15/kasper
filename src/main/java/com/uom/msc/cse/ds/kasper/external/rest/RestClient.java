@@ -17,7 +17,7 @@ public class RestClient {
     @Autowired
     YAMLConfig yamlConfig;
 
-    public String send(String ip, String port, String msg){
+    public String  send(String ip, String port, String msg){
 
         RestTemplate restTemplate = new RestTemplate();
 

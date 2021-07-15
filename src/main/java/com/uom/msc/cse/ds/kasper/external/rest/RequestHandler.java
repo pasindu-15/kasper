@@ -1,6 +1,7 @@
 package com.uom.msc.cse.ds.kasper.external.rest;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
+import com.uom.msc.cse.ds.kasper.application.domain.inputdata.InputDataForFileSearch;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.util.Constants;
 import lombok.extern.log4j.Log4j2;
@@ -37,5 +38,16 @@ public class RequestHandler implements RequestHandlerInterface{
             log.error("Failed to LEAVE");
         }
 
+    }
+
+    public void fileSearchDirectCall(Node myNode, Node neighbourNode, InputDataForFileSearch inputDataForFileSearch){
+
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getDirectCall()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
+
+        try{
+            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+        }catch (Exception e){
+            log.error("Failed to PING");
+        }
     }
 }

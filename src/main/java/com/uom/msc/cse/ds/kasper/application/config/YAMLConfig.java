@@ -33,7 +33,7 @@ public class YAMLConfig {
     @Value("${msg.leave}")
     private String leaveMsg;
 
-
-
+    @Value("${file-serch.directCall}")
+    private String directCall;
 
 }
