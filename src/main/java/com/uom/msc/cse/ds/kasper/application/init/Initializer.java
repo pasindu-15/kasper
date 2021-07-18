@@ -1,7 +1,7 @@
 package com.uom.msc.cse.ds.kasper.application.init;
 
 
-import com.uom.msc.cse.ds.kasper.application.service.NodeHandler;
+import com.uom.msc.cse.ds.kasper.service.NodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.context.WebServerApplicationContext;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
