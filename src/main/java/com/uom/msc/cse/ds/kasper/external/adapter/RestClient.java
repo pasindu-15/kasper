@@ -1,4 +1,4 @@
-package com.uom.msc.cse.ds.kasper.external.rest;
+package com.uom.msc.cse.ds.kasper.external.adapter;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import lombok.extern.log4j.Log4j2;

@@ -13,8 +13,16 @@ log:
 node:
   req-url: "http://{ip}:{port}/${base-url.context}/node/"
 
+search:
+  hops: 5
 msg:
+  register: "REG {ip} {port} {username}"
+  un-register: "UNREG {ip} {port} {username}"
   join: "JOIN {ip} {port}"
+  join-reply: "JOINOK {value}"
   leave: "LEAVE {ip} {port}"
+  leave-reply: "LEAVEOK {value}"
+  search: "SER {ip} {port} {file name} {hops}"
+  search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
 
 
