@@ -27,13 +27,34 @@ public class YAMLConfig {
     @Value("${node.req-url}")
     private String url;
 
+    @Value("${search.hops}")
+    private int hops;
+
+    @Value("${msg.register}")
+    private String regMsg;
+
+    @Value("${msg.un-register}")
+    private String unRegMsg;
+
     @Value("${msg.join}")
     private String joinMsg;
+
+    @Value("${msg.join-reply}")
+    private String joinReply;
 
     @Value("${msg.leave}")
     private String leaveMsg;
 
-    @Value("${file-serch.directCall}")
-    private String directCall;
+    @Value("${msg.leave-reply}")
+    private String leaveReply;
+
+    @Value("${msg.search}")
+    private String searchMsg;
+
+    @Value("${msg.search-reply}")
+    private String searchReply;
+
+
+
 
 }

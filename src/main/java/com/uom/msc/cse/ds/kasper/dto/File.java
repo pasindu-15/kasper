@@ -1,9 +1,16 @@
 package com.uom.msc.cse.ds.kasper.dto;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 
 //@Entity
+@Getter
+@Setter
+@ToString
 public class File {
 
 //    @Id
@@ -11,6 +18,8 @@ public class File {
     private long id;
     @NotBlank(message = "Name is mandatory")
     private String name;
+
+    private int hopeCount;
 
 
     public File() {
@@ -20,28 +29,6 @@ public class File {
         this.name = name;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "File{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
