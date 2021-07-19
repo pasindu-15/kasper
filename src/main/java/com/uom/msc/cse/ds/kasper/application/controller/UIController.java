@@ -1,7 +1,9 @@
 package com.uom.msc.cse.ds.kasper.application.controller;
 
-import com.uom.msc.cse.ds.kasper.application.service.FileService;
-import com.uom.msc.cse.ds.kasper.application.service.NodeHandler;
+import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
+import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
+import com.uom.msc.cse.ds.kasper.service.FileService;
+import com.uom.msc.cse.ds.kasper.service.NodeHandler;
 import com.uom.msc.cse.ds.kasper.dto.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,9 @@ public class UIController {
     @Autowired
     NodeHandler nodeHandler;
 
+    @Autowired
+    YAMLConfig yamlConfig;
+
 
     @GetMapping("/home")
     public String showSignUpForm(File file) {
@@ -32,7 +37,7 @@ public class UIController {
     @PostMapping("/leave")
     public String leaveClient(@Valid String msg, Model model) {
 
-        nodeHandler.unRegAndLeave();
+        nodeHandler.removeFromOwnRouteTable();
 
         System.exit(0);
 
@@ -45,12 +50,17 @@ public class UIController {
             return "home";
         }
 
-        System.out.println(file.toString());
+        FileSearchResponse fr = nodeHandler.doSearch(file.getName(),yamlConfig.getHops());
+        if(fr != null){
+            model.addAttribute("file-search-response", fr);
+        }
 
-
-        List<File> files = fileService.getFileList();
-        System.out.println(files.toString());
-        model.addAttribute("files", files);
+//        System.out.println(file.toString());
+//
+//
+//        List<File> files = fileService.getFileList();
+//        System.out.println(files.toString());
+//        model.addAttribute("files", files);
 
         return "home";
 

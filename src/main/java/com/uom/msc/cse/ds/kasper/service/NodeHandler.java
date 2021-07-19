@@ -1,13 +1,14 @@
-package com.uom.msc.cse.ds.kasper.application.service;
+package com.uom.msc.cse.ds.kasper.service;
 
+import com.uom.msc.cse.ds.kasper.application.socket.SocketServer;
+import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.dto.RouteTable;
-import com.uom.msc.cse.ds.kasper.external.rest.RequestHandlerInterface;
-import com.uom.msc.cse.ds.kasper.external.udp.BSClient;
+import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,38 +18,38 @@ import java.util.List;
 public class NodeHandler {
 
     Node node;
-    BSClient bsClient;
     RequestHandlerInterface requestHandler;
     RouteTable routeTable;
 
-    public NodeHandler(BSClient bsClient, RouteTable routeTable, RequestHandlerInterface requestHandler) throws Exception {
-        this.bsClient = bsClient;
+    SocketServer socketServer;
+
+    public NodeHandler( RouteTable routeTable, RequestHandlerInterface requestHandler,SocketServer socketServer) {
         this.routeTable =routeTable;
         this.requestHandler = requestHandler;
+        this.socketServer = socketServer;
 
     }
 
     public void init(int myPort) throws Exception {
 
         this.node = new Node(myPort);
+        this.socketServer.init(myPort,node.getIpAddress());
+        addToOwnRouteTable();
 
+    }
+
+    private void addToOwnRouteTable(){
         List<Node> neighbours = new ArrayList<>();
-        List<InetSocketAddress> targets = null;
-        try {
-            targets = bsClient.register(node.getUserName(), node.getIpAddress(), node.getPort());
-        } catch (IOException e) {
-            log.error("Node Registering failed");
-            e.printStackTrace();
-        }
+        List<InetSocketAddress> targets = targets = requestHandler.register(this.node);
+
 
         if(targets != null) {
             for (InetSocketAddress target: targets) {
                 String ip = target.getAddress().toString().substring(1);
                 int port = target.getPort();
-                Node neighbourNode = new Node(ip,port);
-                neighbours.add(neighbourNode);
 
-                requestHandler.join(node,neighbourNode);
+                boolean isJoined = requestHandler.join(node,ip,port);
+                if(isJoined) neighbours.add(new Node(ip,port));
 
             }
             routeTable.setNeighbours(neighbours);
@@ -56,23 +57,29 @@ public class NodeHandler {
         }
     }
 
+    public void removeFromOwnRouteTable() {
 
-    //
-    public void unRegAndLeave() {
-        try{
-            this.bsClient.unRegister(this.node.getUserName(), this.node.getIpAddress(), this.node.getPort());
+        boolean res = requestHandler.unRegister(this.node);
 
-            routeTable.getNeighbours().parallelStream().forEach(neighbour -> requestHandler.leave(node,neighbour));
-
-        } catch (IOException e) {
-            log.error("Un-Registering Node failed");
-            e.printStackTrace();
+        if(res){
+            routeTable.getNeighbours().parallelStream().forEach(neighbour -> requestHandler.leave(node,neighbour.getIpAddress(),neighbour.getPort()));
         }
-    }
-
-    public void testSearch() {
 
     }
+
+    public FileSearchResponse doSearch(String keyword, int hops){
+
+        for (Node n: routeTable.getNeighbours()) {
+            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
+            if(fr.getFiles() != null){
+                break;
+            }
+        }
+
+        return null;
+    }
+
+
 //
 //    public int doSearch(String keyword){
 //        return this.searchManager.doSearch(keyword);
