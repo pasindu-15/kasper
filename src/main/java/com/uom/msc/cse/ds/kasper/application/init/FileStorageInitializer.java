@@ -1,8 +1,8 @@
-package com.uom.msc.cse.ds.kasper.application.service;
+package com.uom.msc.cse.ds.kasper.application.init;
 
+import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.application.exception.FileStorageException;
 import com.uom.msc.cse.ds.kasper.application.exception.MyFileNotFoundException;
-import com.uom.msc.cse.ds.kasper.application.property.FileStorageProperties;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -20,18 +20,20 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-public class FileStorageService {
+public class FileStorageInitializer {
 
     @Getter
     private final Path localFileStorageLocation;
     @Getter
     private final Path downloadFileStorageLocation;
 
+
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.localFileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+    public FileStorageInitializer(YAMLConfig yamlConfig) {
+
+        this.localFileStorageLocation = Paths.get(yamlConfig.getUploadDir())
                 .toAbsolutePath().normalize();
-        this.downloadFileStorageLocation = Paths.get(fileStorageProperties.getDownloadDir())
+        this.downloadFileStorageLocation = Paths.get(yamlConfig.getDownloadDir())
                 .toAbsolutePath().normalize();
 
         try {

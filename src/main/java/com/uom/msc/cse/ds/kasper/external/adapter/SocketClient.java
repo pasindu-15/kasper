@@ -1,8 +1,6 @@
 package com.uom.msc.cse.ds.kasper.external.adapter;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-import com.uom.msc.cse.ds.kasper.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.*;
@@ -15,10 +13,12 @@ public class SocketClient{
 
     DatagramSocket datagramSocket;
 
+    YAMLConfig yamlConfig;
 
 
-    SocketClient() throws SocketException {
+    SocketClient(YAMLConfig yamlConfig) throws SocketException {
         datagramSocket = new DatagramSocket();
+        this.yamlConfig = yamlConfig;
     }
 
 
@@ -28,7 +28,7 @@ public class SocketClient{
         DatagramPacket sendingPacket = new DatagramPacket(request.getBytes(),
                 request.length(), InetAddress.getByName(targetIp),targetPort);
 
-        datagramSocket.setSoTimeout(Constants.TIMEOUT_REG);
+        datagramSocket.setSoTimeout(yamlConfig.getTimeout());
 
         datagramSocket.send(sendingPacket);
 

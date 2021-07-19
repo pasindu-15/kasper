@@ -25,7 +25,7 @@ function searchFile(file) {
     formData.append("fileName", file);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/searchFile");
+    xhr.open("POST", "/kasper/v1/searchFile");
 
     xhr.onload = function() {
         console.log(xhr.responseText);
@@ -57,7 +57,7 @@ function downloadFile(fileName,ipAddress,portID) {
     formData.append("portID", portID);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/downloadRemoteFile");
+    xhr.open("POST", "/kasper/v1/downloadFile");
 
     xhr.onload = function() {
         console.log(xhr.responseText);

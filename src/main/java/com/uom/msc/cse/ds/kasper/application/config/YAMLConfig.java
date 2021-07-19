@@ -24,6 +24,9 @@ public class YAMLConfig {
     @Value("${bootstrap.bport}")
     private int BSPort;
 
+    @Value("${socket.timeout}")
+    private int timeout;
+
     @Value("${node.req-url}")
     private String url;
 
@@ -53,6 +56,12 @@ public class YAMLConfig {
 
     @Value("${msg.search-reply}")
     private String searchReply;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @Value("${file.download-dir}")
+    private String downloadDir;
 
 
 

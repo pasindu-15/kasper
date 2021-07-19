@@ -1,15 +1,11 @@
 package com.uom.msc.cse.ds.kasper.external.response;
 
-import com.uom.msc.cse.ds.kasper.dto.File;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
-import com.uom.msc.cse.ds.kasper.util.Constants;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 @Service
 @Log4j2

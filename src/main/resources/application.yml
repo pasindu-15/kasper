@@ -9,9 +9,29 @@ bootstrap:
 
 log:
   identifierKey: UUID
+socket:
+  timeout: 10000
 
 node:
-  req-url: "http://{ip}:{port}/${base-url.context}/node/"
+  req-url: "http://{ip}:{port}/${base-url.context}/downloadFile/{file}"
+
+## MULTIPART (MultipartProperties)
+# Enable multipart uploads
+spring.servlet.multipart.enabled: true
+# Threshold after which files are written to disk.
+spring.servlet.multipart.file-size-threshold: 2KB
+# Max file size.
+spring.servlet.multipart.max-file-size: 200MB
+# Max Request Size
+spring.servlet.multipart.max-request-size: 215MB
+
+## File Storage Properties
+# Please change this to the path where you want the uploaded files to be stored.
+file:
+  upload-dir: "classpath:/drive"
+#  upload-dir: "C:/Personal/MSc_in_CS_UoM/Semester_2/Distributed_Computing/Group_Project-Content_Sharing/kasper/drive"
+  download-dir: "classpath:/downloads"
+#  download-dir: "C:/Personal/MSc_in_CS_UoM/Semester_2/Distributed_Computing/Group_Project-Content_Sharing/kasper/downloads"
 
 search:
   hops: 5

@@ -1,4 +1,4 @@
-package com.uom.msc.cse.ds.kasper.application.payload;
+package com.uom.msc.cse.ds.kasper.dto;
 
 import lombok.Getter;
 import lombok.Setter;

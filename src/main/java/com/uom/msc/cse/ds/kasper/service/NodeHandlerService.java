@@ -15,7 +15,7 @@ import java.util.List;
 
 @Log4j2
 @Service
-public class NodeHandler {
+public class NodeHandlerService {
 
     Node node;
     RequestHandlerInterface requestHandler;
@@ -23,7 +23,7 @@ public class NodeHandler {
 
     SocketServer socketServer;
 
-    public NodeHandler( RouteTable routeTable, RequestHandlerInterface requestHandler,SocketServer socketServer) {
+    public NodeHandlerService(RouteTable routeTable, RequestHandlerInterface requestHandler, SocketServer socketServer) {
         this.routeTable =routeTable;
         this.requestHandler = requestHandler;
         this.socketServer = socketServer;
@@ -79,6 +79,10 @@ public class NodeHandler {
         return null;
     }
 
+
+    public void download(String ip, String port, String fileName){
+        requestHandler.fileDownload(fileName,ip,Integer.parseInt(port));
+    }
 
 //
 //    public int doSearch(String keyword){
