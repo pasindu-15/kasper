@@ -43,25 +43,4 @@ public class RestClient {
 
     }
 
-    public String  sendInputDataForFileSearch(String ip, String port, InputDataForFileSearch msg){
-
-        RestTemplate restTemplate = new RestTemplate();
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-        log.info("MSG SENT: {}",msg);
-
-        String url = UriComponentsBuilder.fromHttpUrl(yamlConfig.getDirectCall()).buildAndExpand(ip,port).toString();
-
-
-        HttpEntity<?> entity = new HttpEntity<>(msg,headers);
-
-        String response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class).getBody();
-
-        return response;
-
-    }
 }

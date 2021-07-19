@@ -101,6 +101,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
+        log.info("search msg: {}", msg);
         try{
 //            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);

@@ -1,4 +1,4 @@
-package com.uom.msc.cse.ds.kasper.application.domain.service;
+package com.uom.msc.cse.ds.kasper.service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;

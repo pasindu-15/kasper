@@ -2,6 +2,7 @@ package com.uom.msc.cse.ds.kasper.application.socket;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.service.RoutingTableService;
+import com.uom.msc.cse.ds.kasper.service.SearchFileService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +22,9 @@ public class SocketServer{
 
     @Autowired
     RoutingTableService routingTableService;
+
+    @Autowired
+    SearchFileService searchFileService;
 
     @Autowired
     YAMLConfig yamlConfig;
@@ -63,6 +67,13 @@ public class SocketServer{
                         isSuccess =routingTableService.removeFromRouteTable(msgData[1],Integer.parseInt(msgData[2]));
                         reply = UriComponentsBuilder.fromPath(yamlConfig.getLeaveReply()).buildAndExpand(isSuccess?0:9999).toString();
                         break;
+                    case "SER": //search: "SER {ip} {port} {file name} {hops}"
+                        String[] tmp = new String[1]; tmp[0] = "";
+                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp);
+                        if(isSuccess) {
+                            reply = tmp[0];
+                            break;
+                        }
                 }
 
                 reply = String.format("%04d %s", reply.length() + 5 ,reply);
@@ -73,6 +84,8 @@ public class SocketServer{
             }
         }catch (IOException ex){
             System.err.println("Socket Server IOException " + ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

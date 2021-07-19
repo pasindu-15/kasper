@@ -1,11 +1,9 @@
 package com.uom.msc.cse.ds.kasper.application.domain.service;
 
 
-import com.uom.msc.cse.ds.kasper.application.domain.inputdata.InputDataForFileSearch;
+import com.uom.msc.cse.ds.kasper.service.FileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class DomainFileSearch {

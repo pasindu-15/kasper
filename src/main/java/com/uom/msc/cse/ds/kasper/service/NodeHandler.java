@@ -73,13 +73,13 @@ public class NodeHandler {
 
     public FileSearchResponse doSearch(String keyword, int hops){
 
+        log.info("Input Search String {}", keyword);
         for (Node n: routeTable.getNeighbours()) {
             FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
             if(fr.getFiles() != null){
                 break;
             }
         }
-
         return null;
     }
 

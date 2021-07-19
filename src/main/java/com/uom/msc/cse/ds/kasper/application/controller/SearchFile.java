@@ -1,30 +1,17 @@
 package com.uom.msc.cse.ds.kasper.application.controller;
 
 
-import com.uom.msc.cse.ds.kasper.application.domain.inputdata.InputDataForFileSearch;
-import com.uom.msc.cse.ds.kasper.application.domain.service.DomainFileSearch;
-import com.uom.msc.cse.ds.kasper.application.domain.service.FileStorage;
-import com.uom.msc.cse.ds.kasper.application.service.NodeHandler;
-import com.uom.msc.cse.ds.kasper.dto.Node;
-import com.uom.msc.cse.ds.kasper.dto.RouteTable;
+//import com.uom.msc.cse.ds.kasper.application.service.NodeHandler;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Set;
+        import org.springframework.stereotype.Controller;
+        import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @Controller
 @RequestMapping(value = "${base-url.context}/search-file")
 public class SearchFile extends BaseController{
 
-    @Autowired
+   /* @Autowired
     DomainFileSearch domainFileSearch;
 
     @Autowired
@@ -55,6 +42,6 @@ public class SearchFile extends BaseController{
                 }
             }
         }
-    }
+    }*/
 
 }
