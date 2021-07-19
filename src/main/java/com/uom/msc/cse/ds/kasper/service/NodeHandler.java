@@ -83,7 +83,9 @@ public class NodeHandler {
         return null;
     }
 
-
+    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
+        return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
+    }
 //
 //    public int doSearch(String keyword){
 //        return this.searchManager.doSearch(keyword);

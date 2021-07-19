@@ -122,6 +122,30 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
     }
 
+    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort){
+
+        if(targetIp == null || targetPort == 0){
+            return null;
+        }
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(requestIp,requestPort,keyword,hops).toString();
+        msg = String.format("%04d %s",msg.length() + 5,msg);
+        log.info("search msg: {}", msg);
+        try{
+//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+
+            log.info(reply.toString());
+
+            return reply;
+
+
+        }catch (Exception e){
+            log.error("Failed to SEARCH");
+        }
+        return null;
+
+    }
+
 
 
 

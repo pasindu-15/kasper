@@ -13,4 +13,5 @@ public interface RequestHandlerInterface {
     public boolean join(Node myNode,String targetIp, int targetPort);
     public boolean leave(Node myNode,String targetIp, int targetPort);
     public FileSearchResponse search(Node myNode, String keyword, int hops, String targetIp, int targetPort);
+    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort);
 }

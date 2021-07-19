@@ -23,8 +23,8 @@ public class SocketServer{
     @Autowired
     RoutingTableService routingTableService;
 
-    @Autowired
-    SearchFileService searchFileService;
+    //@Autowired
+    //SearchFileService searchFileService;
 
     @Autowired
     YAMLConfig yamlConfig;
@@ -67,13 +67,14 @@ public class SocketServer{
                         reply = UriComponentsBuilder.fromPath(yamlConfig.getLeaveReply()).buildAndExpand(isSuccess?0:9999).toString();
                         break;
                     case "SER": //search: "SER {ip} {port} {file name} {hops}"
+                        SearchFileService searchFileService = new SearchFileService();
                         String[] tmp = new String[1]; tmp[0] = "";
-                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip);
+                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
                         if(isSuccess) {
                             reply = tmp[0];
                             break;
                         } else {
-
+                            searchFileService.ReqursiveSearchCall(msgData[2], Integer.parseInt(msgData[3]), msgData[4], Integer.parseInt(msgData[5])-1);
                         }
                 }
 

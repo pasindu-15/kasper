@@ -10,10 +10,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.stream.Collectors;
 
+
+
 @Service
 @Log4j2
 public class SearchFileService {
-
+        @Autowired
+        NodeHandler nodeHandler;
 
         @Autowired
         RouteTable routeTable;
@@ -24,13 +27,12 @@ public class SearchFileService {
         @Autowired
         YAMLConfig yamlConfig;
 
-        public boolean searchFileInCurrentNode(String fileName, String[] replyTmp, int port, String ip) throws Exception {
+        public boolean searchFileInCurrentNode(String fileName, String[] replyTmp, int port, String ip, int hops) throws Exception {
 
             //Node myNode = nodeHandler.getMyNode();
 
             log.info("Search FileIn Current Node Request: {}", fileName);
             if (fileStorage.isFileAvailable(fileName)) {
-                int hops = 0;
                 //  search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                 String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(1, ip, port, hops, fileName).toString();
                 log.info("Success Reply: {}", msg);
@@ -40,26 +42,14 @@ public class SearchFileService {
             return false;
         }
 
-        public boolean removeFromRouteTable(String ip, int port){
-            log.info("BEFORE REMOVE :"+routeTable.getNeighbours().toString());
-
-            try {
-                routeTable.getNeighbours().removeIf(n-> n.getIpAddress().equals(ip) && n.getPort() == port);
-//        routeTable.getNeighbours().parallelStream().filter(n -> !n.getIpAddress().equals(ip) || n.getPort() != port).collect(Collectors.toList());
-
-            }catch (Exception e){
-                return false;
-            }finally {
-                log.info("AFTER REMOVE :"+routeTable.getNeighbours().toString());
+        public String ReqursiveSearchCall(String requestIp, int requestPort, String keyword, int hops){
+            String reply = "";
+            for (Node n: routeTable.getNeighbours()) {
+                reply = nodeHandler.searchWithStringReply(requestIp, requestPort, keyword, hops, n.getIpAddress(), n.getPort());
             }
-
-            return true;
+            return reply;
         }
 
-        private boolean isPresent(String ip, int port){
-
-            return !routeTable.getNeighbours().parallelStream().filter(n -> n.getIpAddress().equals(ip) && n.getPort() == port).collect(Collectors.toList()).isEmpty();
-        }
 
 
 }
