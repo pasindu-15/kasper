@@ -55,6 +55,8 @@
                 <tbody>
                 <div>
                     <tr th:each="file : ${files}">
+
+                        <td th:text="${file.name}"></td>
                         <td th:text="${file.name}"></td>
                     </tr>
                 </div>
@@ -66,7 +68,7 @@
                         <label for="download-name" class="col-form-label">Download File</label>
                         <div class="row">
                             <div class="form-group col-md-10">
-                                <input type="search" th:field="*{name}" class="form-control" id="download-name" placeholder="Enter file name">
+                                <input type="text" th:field="*{name}" class="form-control" id="download-name" placeholder="Enter file name">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-2" align="right">

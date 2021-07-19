@@ -69,6 +69,10 @@ public class NodeHandler {
             e.printStackTrace();
         }
     }
+
+    public void testSearch() {
+
+    }
 //
 //    public int doSearch(String keyword){
 //        return this.searchManager.doSearch(keyword);
