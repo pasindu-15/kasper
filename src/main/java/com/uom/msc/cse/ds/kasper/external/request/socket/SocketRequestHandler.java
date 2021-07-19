@@ -99,6 +99,9 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
     public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort){
 
+        if(targetIp == null || targetPort == 0){
+            return null;
+        }
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         log.info("search msg: {}", msg);

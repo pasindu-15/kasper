@@ -24,18 +24,15 @@ public class SearchFileService {
         @Autowired
         YAMLConfig yamlConfig;
 
-        @Autowired
-        NodeHandler nodeHandler;
+        public boolean searchFileInCurrentNode(String fileName, String[] replyTmp, int port, String ip) throws Exception {
 
-        public boolean searchFileInCurrentNode(String fileName, String[] replyTmp) throws Exception {
-
-            Node myNode = nodeHandler.getMyNode();
+            //Node myNode = nodeHandler.getMyNode();
 
             log.info("Search FileIn Current Node Request: {}", fileName);
             if (fileStorage.isFileAvailable(fileName)) {
                 int hops = 0;
                 //  search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
-                String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(0, myNode.getIpAddress(), myNode.getPort(), hops, fileName).toString();
+                String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(1, ip, port, hops, fileName).toString();
                 log.info("Success Reply: {}", msg);
                 replyTmp[0] = msg;
                 return true;

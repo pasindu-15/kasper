@@ -76,7 +76,7 @@ public class NodeHandler {
         log.info("Input Search String {}", keyword);
         for (Node n: routeTable.getNeighbours()) {
             FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
-            if(fr.getFiles() != null){
+            if((fr != null) && (fr.getFiles() != null)){
                 break;
             }
         }

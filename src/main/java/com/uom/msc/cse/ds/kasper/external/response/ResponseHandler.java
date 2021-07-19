@@ -158,7 +158,7 @@ public class ResponseHandler {
             fileSearchResponse.setPort(Integer.parseInt(msgData[4]));
             fileSearchResponse.setHops(Integer.parseInt(msgData[5]));
 
-            for(int i=1 ; i<code; i++ ){
+            for(int i=1 ; i<=code; i++ ){
                files.add(msgData[5 + i]);
             }
             fileSearchResponse.setFiles(files);

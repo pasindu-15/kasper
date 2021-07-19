@@ -29,7 +29,6 @@ public class SocketServer{
     @Autowired
     YAMLConfig yamlConfig;
 
-
     @Async("threadPoolExecutor")
     public void init(int port, String ip) {
         try {
@@ -60,19 +59,21 @@ public class SocketServer{
                 boolean isSuccess;
                 switch (command){
                     case "JOIN":
-                        isSuccess = routingTableService.addToRouteTable(msgData[1],Integer.parseInt(msgData[2]));
+                        isSuccess = routingTableService.addToRouteTable(msgData[2],Integer.parseInt(msgData[3]));
                         reply = UriComponentsBuilder.fromPath(yamlConfig.getJoinReply()).buildAndExpand(isSuccess?0:9999).toString();
                         break;
                     case "LEAVE":
-                        isSuccess =routingTableService.removeFromRouteTable(msgData[1],Integer.parseInt(msgData[2]));
+                        isSuccess =routingTableService.removeFromRouteTable(msgData[2],Integer.parseInt(msgData[3]));
                         reply = UriComponentsBuilder.fromPath(yamlConfig.getLeaveReply()).buildAndExpand(isSuccess?0:9999).toString();
                         break;
                     case "SER": //search: "SER {ip} {port} {file name} {hops}"
                         String[] tmp = new String[1]; tmp[0] = "";
-                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp);
+                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip);
                         if(isSuccess) {
                             reply = tmp[0];
                             break;
+                        } else {
+
                         }
                 }
 
