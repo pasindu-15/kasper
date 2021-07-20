@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Log4j2
 @Service
@@ -74,8 +75,11 @@ public class NodeHandler {
     public FileSearchResponse doSearch(String keyword, int hops){
 
         log.info("Input Search String {}", keyword);
+        String uniqueID = UUID.randomUUID().toString();
+        String uniqIdForSearch = "search"+uniqueID;
+
         for (Node n: routeTable.getNeighbours()) {
-            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
+            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(), uniqIdForSearch);
             if((fr != null) && (fr.getFiles() != null)){
                 break;
             }

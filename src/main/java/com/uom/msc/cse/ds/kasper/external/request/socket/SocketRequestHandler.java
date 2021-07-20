@@ -97,12 +97,12 @@ public class SocketRequestHandler implements RequestHandlerInterface {
     }
 
 
-    public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort){
+    public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort, String uniqIdForSearch){
 
         if(targetIp == null || targetPort == 0){
             return null;
         }
-        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops,uniqIdForSearch).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         log.info("search msg: {}", msg);
         try{
@@ -119,6 +119,22 @@ public class SocketRequestHandler implements RequestHandlerInterface {
             log.error("Failed to SEARCH");
         }
         return null;
+
+    }
+
+    public boolean sendSearchData(String msg,String targetIp, int targetPort){
+
+        try{
+//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+            FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
+
+            log.info(fileSearchResponse.toString());
+
+        }catch (Exception e){
+            log.error("Failed to SEARCH");
+        }
+        return true;
 
     }
 

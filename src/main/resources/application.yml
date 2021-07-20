@@ -22,7 +22,7 @@ msg:
   join-reply: "JOINOK {value}"
   leave: "LEAVE {ip} {port}"
   leave-reply: "LEAVEOK {value}"
-  search: "SER {ip} {port} {file name} {hops}"
+  search: "SER {ip} {port} {file name} {hops} {uniqId}"
   search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
 
 file-serch:

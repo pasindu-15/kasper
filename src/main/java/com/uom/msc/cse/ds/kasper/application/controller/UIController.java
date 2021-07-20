@@ -5,6 +5,7 @@ import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.service.FileService;
 import com.uom.msc.cse.ds.kasper.service.NodeHandler;
 import com.uom.msc.cse.ds.kasper.dto.File;
+import com.uom.msc.cse.ds.kasper.service.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,10 @@ public class UIController {
     @Autowired
     YAMLConfig yamlConfig;
 
+    @Autowired
+    SearchResult searchResult;
+
+
 
     @GetMapping("/home")
     public String showSignUpForm(File file) {
@@ -49,8 +54,13 @@ public class UIController {
         if (result.hasErrors()) {
             return "home";
         }
-
-        FileSearchResponse fr = nodeHandler.doSearch(file.getName(),yamlConfig.getHops());
+        nodeHandler.doSearch(file.getName(),yamlConfig.getHops());
+        while (true){
+            if(!searchResult.getFileSearchResponse().isEmpty()){
+                break;
+            }
+        }
+        FileSearchResponse fr = searchResult.getFileSearchResponse().get(0);
         if(fr != null){
             model.addAttribute("file-search-response", fr);
         }

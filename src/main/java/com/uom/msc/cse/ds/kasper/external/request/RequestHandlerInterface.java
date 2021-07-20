@@ -12,6 +12,7 @@ public interface RequestHandlerInterface {
     public List<InetSocketAddress> register(Node myNode);
     public boolean join(Node myNode,String targetIp, int targetPort);
     public boolean leave(Node myNode,String targetIp, int targetPort);
-    public FileSearchResponse search(Node myNode, String keyword, int hops, String targetIp, int targetPort);
+    public FileSearchResponse search(Node myNode, String keyword, int hops, String targetIp, int targetPort, String uniqIdForSearch);
     public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort);
+    public boolean sendSearchData(String msg, String targetIp, int targetPort);
 }
