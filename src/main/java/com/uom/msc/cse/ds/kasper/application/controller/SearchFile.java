@@ -1,7 +1,7 @@
 package com.uom.msc.cse.ds.kasper.application.controller;
 
 
-//import com.uom.msc.cse.ds.kasper.application.service.NodeHandler;
+//import com.uom.msc.cse.ds.kasper.application.service.NodeHandlerService;
 import lombok.extern.log4j.Log4j2;
         import org.springframework.stereotype.Controller;
         import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class SearchFile extends BaseController{
     RouteTable routeTable;
 
     @Autowired
-    NodeHandler nodeHandler;
+    NodeHandlerService nodeHandlerService;
 
     @PostMapping(value = "/direct-find", produces = MediaType.APPLICATION_JSON_VALUE)
     public void searchFileFromNetwork(@Validated @RequestBody InputDataForFileSearch serchFileInput) throws Exception {
@@ -28,9 +28,9 @@ public class SearchFile extends BaseController{
         boolean isFileAvailble = domainFileSearch.searchFileFromNetwork(searchFileName);
         List<Node> visitedNodes = serchFileInput.getVisitedNodes();
         if(visitedNodes.isEmpty()){
-            serchFileInput.setRequester(nodeHandler.getMyNode());
+            serchFileInput.setRequester(nodeHandlerService.getMyNode());
         }
-        visitedNodes.add(nodeHandler.getMyNode());
+        visitedNodes.add(nodeHandlerService.getMyNode());
 
         log.info( "File Availability: {}", isFileAvailble);
         if(!isFileAvailble) {

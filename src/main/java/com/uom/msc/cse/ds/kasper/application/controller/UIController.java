@@ -2,28 +2,32 @@ package com.uom.msc.cse.ds.kasper.application.controller;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
+import com.uom.msc.cse.ds.kasper.dto.SearchFileResponse;
 import com.uom.msc.cse.ds.kasper.service.FileService;
-import com.uom.msc.cse.ds.kasper.service.NodeHandler;
+import com.uom.msc.cse.ds.kasper.service.NodeHandlerService;
 import com.uom.msc.cse.ds.kasper.dto.File;
+import com.uom.msc.cse.ds.kasper.service.SearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @Controller
+@RequestMapping("${base-url.context}")
 public class UIController {
 
     @Autowired
     private FileService fileService;
 
     @Autowired
-    NodeHandler nodeHandler;
+    NodeHandlerService nodeHandlerService;
 
     @Autowired
     YAMLConfig yamlConfig;
@@ -39,13 +43,13 @@ public class UIController {
     }
 
     @PostMapping("/leave")
-    public String leaveClient(@Valid String msg, Model model) {
-
-        nodeHandler.removeFromOwnRouteTable();
+//    public String leaveClient(@Valid String msg, Model model) {
+    public String leaveClient(@RequestParam("leave") String msg) {
+        nodeHandlerService.removeFromOwnRouteTable();
 
         System.exit(0);
 
-        return null;
+        return "Successfully Leaved";
     }
 
     @PostMapping("/search")
@@ -53,7 +57,7 @@ public class UIController {
         if (result.hasErrors()) {
             return "home";
         }
-        nodeHandler.doSearch(file.getName(),yamlConfig.getHops());
+        nodeHandlerService.doSearch(file.getName(),yamlConfig.getHops());
         while (true){
             if(!searchResult.getFileSearchResponse().isEmpty()){
                 break;
@@ -64,12 +68,6 @@ public class UIController {
             model.addAttribute("file-search-response", fr);
         }
 
-//        System.out.println(file.toString());
-//
-//
-//        List<File> files = fileService.getFileList();
-//        System.out.println(files.toString());
-//        model.addAttribute("files", files);
 
         return "home";
 
@@ -87,32 +85,5 @@ public class UIController {
 
     }
 
-//    @GetMapping("/edit/{id}")
-//    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-////        File file = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid file Id:" + id));
-////        model.addAttribute("file", file);
-//
-//        return "update-file";
-//    }
-//
-//    @PostMapping("/update/{id}")
-//    public String updateUser(@PathVariable("id") long id, @Valid File file, BindingResult result, Model model) {
-//        if (result.hasErrors()) {
-//            file.setId(id);
-//            return "update-file";
-//        }
-//
-////        userRepository.save(file);
-//
-//        return "redirect:/index";
-//    }
-//
-//    @GetMapping("/delete/{id}")
-//    public String deleteUser(@PathVariable("id") long id, Model model) {
-////        File file = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid file Id:" + id));
-////        userRepository.delete(file);
-//
-//        return "redirect:/index";
-//    }
 }
 

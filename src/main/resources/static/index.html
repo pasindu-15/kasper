@@ -9,16 +9,34 @@
         <noscript>
             <h2>Sorry! Your browser doesn't support Javascript</h2>
         </noscript>
-        <div class="upload-container">
+
+        <div class="col-md-2 upload-container">
             <div class="upload-header">
                 <h2>Kasper File Sharing System</h2>
+            </div>
+            <div class="col-md-2" align="right">
+                <form id="leave-form" name="leave-form">
+                    <!--                    <input type="submit" class="btn btn-primary-red" value="Leave" >-->
+                    <button type="submit" class="btn btn-primary-red">Leave</button>
+                </form>
+                <div class="leave-response">
+                    <div id="leave-error"></div>
+                    <div id="leave-success"></div>
+                </div>
             </div>
             <div class="upload-content">
                 <div class="search-file">
                     <h3>Search File</h3>
                     <form id="searchFileForm" name="searchFileForm">
-                        <input id="searchFileFormInput" type="text" name="file" class="file-input" required />
-                        <button type="submit" class="primary submit-btn">Submit</button>
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <input id="searchFileFormInput" type="text" name="file" class="file-input" required />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button type="submit" class="primary submit-btn">Submit</button>
+                            </div>
+                        </div>
+
                     </form>
                     <div class="search-file-response">
                         <div id="searchFileError"></div>

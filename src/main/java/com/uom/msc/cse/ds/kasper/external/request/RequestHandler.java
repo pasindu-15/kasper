@@ -11,10 +11,10 @@ import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.core.io.Resource;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -109,7 +109,7 @@ public class RequestHandler implements RequestHandlerInterface {
 
     }
 
-
+    @Override
     public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort){
 
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
@@ -130,7 +130,7 @@ public class RequestHandler implements RequestHandlerInterface {
         return null;
 
     }
-
+    @Override
     public void fileDownload(String fileName, String targetIp, int targetPort){
         String url = UriComponentsBuilder.fromPath(yamlConfig.getUrl()).buildAndExpand(targetIp,targetPort,fileName).toString();
 //
@@ -139,7 +139,7 @@ public class RequestHandler implements RequestHandlerInterface {
 
             InputStream is = resource.getInputStream();
 
-            File targetFile = new File(String.format("{}/{}",fileStorageInitializer.getDownloadFileStorageLocation().toString(),fileName));
+            java.io.File targetFile = new File(String.format("{}/{}",fileStorageInitializer.getDownloadFileStorageLocation().toString(),fileName));
 
             Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -152,6 +152,73 @@ public class RequestHandler implements RequestHandlerInterface {
             log.error("Failed to Download");
         }
     }
+
+
+    public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort, String uniqIdForSearch){
+
+        if(targetIp == null || targetPort == 0){
+            return null;
+        }
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops,uniqIdForSearch).toString();
+        msg = String.format("%04d %s",msg.length() + 5,msg);
+        log.info("search msg: {}", msg);
+        try{
+//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+            FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
+
+            log.info(fileSearchResponse.toString());
+
+            return fileSearchResponse;
+
+
+        }catch (Exception e){
+            log.error("Failed to SEARCH");
+        }
+        return null;
+
+    }
+
+    public boolean sendSearchData(String msg,String targetIp, int targetPort){
+
+        try{
+//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+            FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
+
+            log.info(fileSearchResponse.toString());
+
+        }catch (Exception e){
+            log.error("Failed to SEARCH");
+        }
+        return true;
+
+    }
+
+    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort){
+
+        if(targetIp == null || targetPort == 0){
+            return null;
+        }
+        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(requestIp,requestPort,keyword,hops).toString();
+        msg = String.format("%04d %s",msg.length() + 5,msg);
+        log.info("search msg: {}", msg);
+        try{
+//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+
+            log.info(reply.toString());
+
+            return reply;
+
+
+        }catch (Exception e){
+            log.error("Failed to SEARCH");
+        }
+        return null;
+
+    }
+
 
 
 

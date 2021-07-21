@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Log4j2
 @Service
-public class NodeHandler {
+public class NodeHandlerService {
 
     Node node;
     RequestHandlerInterface requestHandler;
@@ -24,7 +24,7 @@ public class NodeHandler {
 
     SocketServer socketServer;
 
-    public NodeHandler( RouteTable routeTable, RequestHandlerInterface requestHandler,SocketServer socketServer) {
+    public NodeHandlerService(RouteTable routeTable, RequestHandlerInterface requestHandler, SocketServer socketServer) {
         this.routeTable =routeTable;
         this.requestHandler = requestHandler;
         this.socketServer = socketServer;

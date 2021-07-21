@@ -1,5 +1,9 @@
 'use strict';
 
+var leaveForm = document.querySelector('#leave-form');
+var leaveError = document.querySelector('#leave-error');
+var leaveSuccess = document.querySelector('#leave-success');
+
 var searchFileForm = document.querySelector('#searchFileForm');
 var searchFileFormInput = document.querySelector('#searchFileFormInput');
 var searchFileError = document.querySelector('#searchFileError');
@@ -76,6 +80,28 @@ function downloadFile(fileName,ipAddress,portID) {
     xhr.send(formData);
 }
 
+function leave(){
+    var formData = new FormData();
+        formData.append("leave", "leave");
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/kasper/v1/leave");
+
+        xhr.onload = function() {
+            console.log(xhr.responseText);
+            leaveResponse = xhr.responseText;
+            if(xhr.status == 200) {
+              leaveSuccess.innerHTML = "<p>Leaving...!</p>";
+
+            } else {
+
+                leaveError.innerHTML = (response && response.message) || "Some Error Occurred";
+            }
+        }
+
+        xhr.send(formData);
+}
+
 function uploadSingleFile(file) {
     var formData = new FormData();
     formData.append("file", file);
@@ -127,6 +153,10 @@ function uploadMultipleFiles(files) {
 
     xhr.send(formData);
 }
+
+leaveForm.addEventListener('submit', function(event){
+   leave();
+}, true);
 
 searchFileForm.addEventListener('submit', function(event){
     var fileName = searchFileFormInput.value;
