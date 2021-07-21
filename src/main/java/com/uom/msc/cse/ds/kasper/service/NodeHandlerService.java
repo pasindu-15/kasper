@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Log4j2
 @Service
-public class NodeHandlerService {
+public class NodeHandler {
 
     Node node;
     RequestHandlerInterface requestHandler;
@@ -23,11 +24,15 @@ public class NodeHandlerService {
 
     SocketServer socketServer;
 
-    public NodeHandlerService(RouteTable routeTable, RequestHandlerInterface requestHandler, SocketServer socketServer) {
+    public NodeHandler( RouteTable routeTable, RequestHandlerInterface requestHandler,SocketServer socketServer) {
         this.routeTable =routeTable;
         this.requestHandler = requestHandler;
         this.socketServer = socketServer;
 
+    }
+
+    public Node getMyNode() throws Exception{
+        return this.node;
     }
 
     public void init(int myPort) throws Exception {
@@ -69,13 +74,16 @@ public class NodeHandlerService {
 
     public FileSearchResponse doSearch(String keyword, int hops){
 
+        log.info("Input Search String {}", keyword);
+        String uniqueID = UUID.randomUUID().toString();
+        String uniqIdForSearch = "search"+uniqueID;
+
         for (Node n: routeTable.getNeighbours()) {
             FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
             if(fr.getFiles() != null){
                 break;
             }
         }
-
         return null;
     }
 
@@ -84,6 +92,9 @@ public class NodeHandlerService {
         requestHandler.fileDownload(fileName,ip,Integer.parseInt(port));
     }
 
+    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
+        return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
+    }
 //
 //    public int doSearch(String keyword){
 //        return this.searchManager.doSearch(keyword);

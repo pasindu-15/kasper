@@ -3,7 +3,7 @@ package com.uom.msc.cse.ds.kasper.application.controller;
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.service.FileService;
-import com.uom.msc.cse.ds.kasper.service.NodeHandlerService;
+import com.uom.msc.cse.ds.kasper.service.NodeHandler;
 import com.uom.msc.cse.ds.kasper.dto.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -22,10 +23,14 @@ public class UIController {
     private FileService fileService;
 
     @Autowired
-    NodeHandlerService nodeHandlerService;
+    NodeHandler nodeHandler;
 
     @Autowired
     YAMLConfig yamlConfig;
+
+    @Autowired
+    SearchResult searchResult;
+
 
 
     @GetMapping("/home")
@@ -36,7 +41,7 @@ public class UIController {
     @PostMapping("/leave")
     public String leaveClient(@Valid String msg, Model model) {
 
-        nodeHandlerService.removeFromOwnRouteTable();
+        nodeHandler.removeFromOwnRouteTable();
 
         System.exit(0);
 
@@ -48,8 +53,13 @@ public class UIController {
         if (result.hasErrors()) {
             return "home";
         }
-
-        FileSearchResponse fr = nodeHandlerService.doSearch(file.getName(),yamlConfig.getHops());
+        nodeHandler.doSearch(file.getName(),yamlConfig.getHops());
+        while (true){
+            if(!searchResult.getFileSearchResponse().isEmpty()){
+                break;
+            }
+        }
+        FileSearchResponse fr = searchResult.getFileSearchResponse().get(0);
         if(fr != null){
             model.addAttribute("file-search-response", fr);
         }
