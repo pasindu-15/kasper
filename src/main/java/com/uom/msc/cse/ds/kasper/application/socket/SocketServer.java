@@ -85,9 +85,23 @@ public class SocketServer{
                             reply = String.format("%04d %s", reply.length() + 5 ,reply);
                             searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
                         } else if(searchFileService.isNewRequest(uniqIdForSearch)){
-                            reply = searchFileService.ReqursiveSearchCall(msgData[2], Integer.parseInt(msgData[3]), msgData[4], Integer.parseInt(msgData[5])-1, msgData[6]);
+                            String requestIP = msgData[2];
+                            int requestPort = Integer.parseInt(msgData[3]);
+                            String fileName = msgData[4];
+                            int hops = Integer.parseInt(msgData[5]) - 1;
+                            String searchUniqId = msgData[6];
+                            String incomingIp;
+                            int incomingPort;
+                            try {
+                                incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
+                                incomingPort = incoming.getPort();
+                                reply = searchFileService.ReqursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
+                            } catch (UnknownHostException e) {
+                                log.error("Getting address failed");
+                                throw new RuntimeException("Getting address failed");
+                            }
                         } else{
-                            reply = "Stopped";
+                            reply = "Stopped Reqursive";
                         }
                     case "SEROK" : //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                         searchResult.addToSearchResult(msg);

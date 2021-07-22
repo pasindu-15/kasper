@@ -7,6 +7,7 @@ import com.uom.msc.cse.ds.kasper.dto.RouteTable;
 import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
@@ -72,12 +73,19 @@ public class NodeHandlerService {
 
     }
 
+    @Autowired
+    SearchFileService searchFileService;
+
+    @Autowired
+    SearchResult searchResult;
+
     public FileSearchResponse doSearch(String keyword, int hops){
 
         log.info("Input Search String {}", keyword);
         String uniqueID = UUID.randomUUID().toString();
         String uniqIdForSearch = "search"+uniqueID;
-
+        searchResult.cleanSearchResponse();
+        searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
         for (Node n: routeTable.getNeighbours()) {
             FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
             if(fr.getFiles() != null){
