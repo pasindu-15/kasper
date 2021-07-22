@@ -1,9 +1,11 @@
 package com.uom.msc.cse.ds.kasper.application.controller;
 
-import com.uom.msc.cse.ds.kasper.dto.SearchFileResponse;
-import com.uom.msc.cse.ds.kasper.dto.UploadFileResponse;
+import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
+import com.uom.msc.cse.ds.kasper.application.domain.service.DomainFileSearch;
+import com.uom.msc.cse.ds.kasper.dto.*;
 import com.uom.msc.cse.ds.kasper.application.init.FileStorageInitializer;
 import com.uom.msc.cse.ds.kasper.service.NodeHandlerService;
+import com.uom.msc.cse.ds.kasper.service.SearchResult;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +41,37 @@ public class FileController {
     @Autowired
     private ServletWebServerApplicationContext webServerAppCtxt;
 
+    @Autowired
+    DomainFileSearch domainFileSearch;
+
+    @Autowired
+    RouteTable routeTable;
+
+    @Autowired
+    YAMLConfig yamlConfig;
+
+    @Autowired
+    SearchResult searchResult;
+
+
     @PostMapping("/searchFile")
     public SearchFileResponse searchFile(@RequestParam("fileName") String fileName) {
 
 
+
+        nodeHandlerService.doSearch(fileName,yamlConfig.getHops());
+        while (true){
+            if(!searchResult.getFileSearchResponse().isEmpty()){
+                break;
+            }
+        }
+        FileSearchResponse fr = searchResult.getFileSearchResponse().get(0);
+        if(fr != null){
+            return new SearchFileResponse(fr.getFiles().get(0), fr.getIp(), Integer.toString(fr.getPort()));
+        }
+
         return null;
-//        return new SearchFileResponse(fileName, localHost.getHostAddress(), Integer.toString(port));
+
     }
 
     @PostMapping("/downloadFile")

@@ -43,8 +43,8 @@ public class UIController {
     }
 
     @PostMapping("/leave")
-//    public String leaveClient(@Valid String msg, Model model) {
-    public String leaveClient(@RequestParam("leave") String msg) {
+    public String leaveClient(@Valid String msg, Model model) {
+//    public String leaveClient() {
         nodeHandlerService.removeFromOwnRouteTable();
 
         System.exit(0);

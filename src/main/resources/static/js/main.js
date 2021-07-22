@@ -81,8 +81,8 @@ function downloadFile(fileName,ipAddress,portID) {
 }
 
 function leave(){
-    var formData = new FormData();
-        formData.append("leave", "leave");
+//    var formData = new FormData();
+//        formData.append("leave", "leave");
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/kasper/v1/leave");
@@ -99,8 +99,12 @@ function leave(){
             }
         }
 
-        xhr.send(formData);
+//        xhr.send(formData);
 }
+
+leaveForm.addEventListener('submit', function(event){
+   leave();
+}, true);
 
 function uploadSingleFile(file) {
     var formData = new FormData();
@@ -154,9 +158,7 @@ function uploadMultipleFiles(files) {
     xhr.send(formData);
 }
 
-leaveForm.addEventListener('submit', function(event){
-   leave();
-}, true);
+
 
 searchFileForm.addEventListener('submit', function(event){
     var fileName = searchFileFormInput.value;
