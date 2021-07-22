@@ -109,27 +109,27 @@ public class RequestHandler implements RequestHandlerInterface {
 
     }
 
-    @Override
-    public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort){
-
-        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
-        msg = String.format("%04d %s",msg.length() + 5,msg);
-        try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
-            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
-            FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
-
-            log.info(fileSearchResponse.toString());
-
-            return fileSearchResponse;
-
-
-        }catch (Exception e){
-            log.error("Failed to SEARCH");
-        }
-        return null;
-
-    }
+//    @Override
+//    public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort){
+//
+//        String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops).toString();
+//        msg = String.format("%04d %s",msg.length() + 5,msg);
+//        try{
+////            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
+//            String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+//            FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
+//
+//            log.info(fileSearchResponse.toString());
+//
+//            return fileSearchResponse;
+//
+//
+//        }catch (Exception e){
+//            log.error("Failed to SEARCH");
+//        }
+//        return null;
+//
+//    }
     @Override
     public void fileDownload(String fileName, String targetIp, int targetPort){
         String url = UriComponentsBuilder.fromPath(yamlConfig.getUrl()).buildAndExpand(targetIp,targetPort,fileName).toString();

@@ -74,7 +74,7 @@ public class SocketServer{
                         //SearchFileService searchFileService; //= new SearchFileService();
                         String[] tmp = new String[1]; tmp[0] = "";
                         String uniqIdForSearch = msgData[6];
-                        reply = "Search Request Received";
+                        reply = "SERNOTIFY";
                         reply = String.format("%04d %s", reply.length() + 5 ,reply);
                         DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
                         datagramSocket.send(dpReply);

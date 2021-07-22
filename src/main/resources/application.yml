@@ -44,6 +44,7 @@ msg:
   leave-reply: "LEAVEOK {value}"
   search: "SER {ip} {port} {file name} {hops} {uniqId}"
   search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
+  search-notify: "SERNOTIFY"
 
 file-serch:
   directCall: "Search"

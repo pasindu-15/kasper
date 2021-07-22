@@ -79,7 +79,7 @@ public class NodeHandlerService {
         String uniqIdForSearch = "search"+uniqueID;
 
         for (Node n: routeTable.getNeighbours()) {
-            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort());
+            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
             if(fr.getFiles() != null){
                 break;
             }
