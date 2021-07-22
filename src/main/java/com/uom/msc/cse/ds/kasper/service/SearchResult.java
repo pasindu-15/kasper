@@ -43,7 +43,11 @@ public class SearchResult {
 
     ArrayList<FileSearchResponse> fileSearchResponse;
 
-    public boolean addToSearchResult(String reply){
+    public void cleanSearchResponse(){
+        fileSearchResponse.clear();
+    }
+
+    public boolean  addToSearchResult(String reply){
 
         log.info("Search File Response : {} " , reply);
         try{

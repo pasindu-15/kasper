@@ -103,6 +103,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
             return null;
         }
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),keyword,hops,uniqIdForSearch).toString();
+
         msg = String.format("%04d %s",msg.length() + 5,msg);
         log.info("search msg: {}", msg);
         try{

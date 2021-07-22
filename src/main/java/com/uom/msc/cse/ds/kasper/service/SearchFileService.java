@@ -73,7 +73,7 @@ public class SearchFileService {
         }
 
 
-        public String ReqursiveSearchCall(String requestIp, int requestPort, String keyword, int hops, String uniqId){
+        public String ReqursiveSearchCall(String requestIp, int requestPort, String keyword, int hops, String uniqId, String incomingIP, int incomingPort){
             String replyG = "Sent to all neigours";
 
             if(hops <= 0) {
@@ -81,6 +81,9 @@ public class SearchFileService {
             }
             for (Node n: routeTable.getNeighbours()) {
                 String reply;
+                if(n.getIpAddress() == incomingIP && n.getPort() == incomingPort){
+                    continue;
+                }
                 reply = searchWithStringReply(requestIp, requestPort, keyword, hops, n.getIpAddress(), n.getPort(), uniqId);
                 //"SEROK {No of Files} {ip} {port} {hops} {file names}"
                 /*if(reply == null){
