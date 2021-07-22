@@ -5,6 +5,8 @@ import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.dto.RouteTable;
 import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,33 +17,19 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class SearchResult {
+@Getter
+@Setter
+public class SearchResultService {
 
-    @Autowired
-    ResponseHandler responseHandler;
+    private ResponseHandler responseHandler;
 
-    public SearchResult(ResponseHandler responseHandler, ArrayList<FileSearchResponse> fileSearchResponse) {
+    private ArrayList<FileSearchResponse> fileSearchResponse;
+
+    public SearchResultService(ResponseHandler responseHandler, ArrayList<FileSearchResponse> fileSearchResponse) {
         this.responseHandler = responseHandler;
         this.fileSearchResponse = fileSearchResponse;
     }
 
-    public ResponseHandler getResponseHandler() {
-        return responseHandler;
-    }
-
-    public void setResponseHandler(ResponseHandler responseHandler) {
-        this.responseHandler = responseHandler;
-    }
-
-    public ArrayList<FileSearchResponse> getFileSearchResponse() {
-        return fileSearchResponse;
-    }
-
-    public void setFileSearchResponse(ArrayList<FileSearchResponse> fileSearchResponse) {
-        this.fileSearchResponse = fileSearchResponse;
-    }
-
-    ArrayList<FileSearchResponse> fileSearchResponse;
 
     public void cleanSearchResponse(){
         fileSearchResponse.clear();
@@ -54,6 +42,8 @@ public class SearchResult {
             FileSearchResponse fileSearchResponseTmp = responseHandler.handleSearchResponse(reply);
             fileSearchResponse.add(fileSearchResponseTmp);
         }catch (Exception e){
+            log.error("Search Failed {}",e.getMessage());
+            e.printStackTrace();
             return false;
         }
 

@@ -77,18 +77,28 @@ public class NodeHandlerService {
     SearchFileService searchFileService;
 
     @Autowired
-    SearchResult searchResult;
+    SearchResultService searchResultService;
+
+    public List<String> searchOwn(String keyword){
+        try {
+            return searchFileService.searchFileInCurrentNode(keyword);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public FileSearchResponse doSearch(String keyword, int hops){
 
         log.info("Input Search String {}", keyword);
         String uniqueID = UUID.randomUUID().toString();
         String uniqIdForSearch = "search"+uniqueID;
-        searchResult.cleanSearchResponse();
+        searchResultService.cleanSearchResponse();
         searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
         for (Node n: routeTable.getNeighbours()) {
             FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
-            if(fr.getFiles() != null){
+
+            if(fr != null && fr.getFiles() != null){
                 break;
             }
         }
@@ -103,53 +113,5 @@ public class NodeHandlerService {
     public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
         return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
     }
-//
-//    public int doSearch(String keyword){
-//        return this.searchManager.doSearch(keyword);
-//    }
-//
-//    public List<String> doUISearch(String keyword) {
-//        return this.searchManager.doUISearch(keyword);
-//    }
-//
-//    public void getFile(int fileOption) {
-//        try {
-//            SearchResult fileDetail = this.searchManager.getFileDetails(fileOption);
-//            System.out.println("The file you requested is " + fileDetail.getFileName());
-//            FTPClient ftpClient = new FTPClient(fileDetail.getAddress(), fileDetail.getTcpPort(),
-//                    fileDetail.getFileName());
-//
-//            System.out.println("Waiting for file download...");
-//            Thread.sleep(Constants.FILE_DOWNLOAD_TIMEOUT);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void getFile(int fileOption, TextArea textArea) {
-//        try {
-//            SearchResult fileDetail = this.searchManager.getFileDetails(fileOption);
-//            System.out.println("The file you requested is " + fileDetail.getFileName());
-//            FTPClient ftpClient = new FTPClient(fileDetail.getAddress(), fileDetail.getTcpPort(),
-//                    fileDetail.getFileName(),textArea);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
 
-
-//
-//    public void printRoutingTable(){
-//        this.messageBroker.getRoutingTable().print();
-//    }
-//
-//    public String getRoutingTable() {
-//       return this.messageBroker.getRoutingTable().toString();
-//    }
-//
-//    public String getFileNames() {
-//        return this.messageBroker.getFiles();
-//    }
 }

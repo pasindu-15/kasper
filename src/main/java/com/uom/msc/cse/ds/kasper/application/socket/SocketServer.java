@@ -3,7 +3,7 @@ package com.uom.msc.cse.ds.kasper.application.socket;
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.service.RoutingTableService;
 import com.uom.msc.cse.ds.kasper.service.SearchFileService;
-import com.uom.msc.cse.ds.kasper.service.SearchResult;
+import com.uom.msc.cse.ds.kasper.service.SearchResultService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -31,7 +31,7 @@ public class SocketServer{
     YAMLConfig yamlConfig;
 
     @Autowired
-    SearchResult searchResult;
+    SearchResultService searchResultService;
 
     @Async("threadPoolExecutor")
     public void init(int port, String ip) {
@@ -95,7 +95,7 @@ public class SocketServer{
                             try {
                                 incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
                                 incomingPort = incoming.getPort();
-                                reply = searchFileService.ReqursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
+                                reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
                             } catch (UnknownHostException e) {
                                 log.error("Getting address failed");
                                 throw new RuntimeException("Getting address failed");
@@ -104,7 +104,7 @@ public class SocketServer{
                             reply = "Stopped Reqursive";
                         }
                     case "SEROK" : //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
-                        searchResult.addToSearchResult(msg);
+                        searchResultService.addToSearchResult(msg);
                 }
                 if(!allreadyRepiled) {
                     reply = String.format("%04d %s", reply.length() + 5, reply);

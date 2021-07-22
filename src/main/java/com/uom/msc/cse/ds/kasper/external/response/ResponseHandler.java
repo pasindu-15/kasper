@@ -141,7 +141,8 @@ public class ResponseHandler {
         String[] msgData = response.split(" ");
 
         if (!SEROK.equals(msgData[1])) {
-            throw new IllegalStateException(SEROK + " not received");
+            log.error(response);
+            return null;
         }
 
         int code = Integer.parseInt(msgData[2]);
@@ -155,12 +156,11 @@ public class ResponseHandler {
             fileSearchResponse.setHops(Integer.parseInt(msgData[5]));
 
             for(int i=1 ; i<=code; i++ ){
-               files.add(msgData[5 + i]);
+                files.add(msgData[5 + i]);
             }
             fileSearchResponse.setFiles(files);
             return fileSearchResponse;
         }
-
 
         switch (code) {
             case 0:

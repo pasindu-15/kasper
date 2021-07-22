@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 
 
 @Service
@@ -44,14 +44,30 @@ public class SearchFileService {
             return true;
         }
 
-        public boolean searchFileInCurrentNode(String fileName, String[] replyTmp, int port, String ip, int hops) throws Exception {
+    public List<String> searchFileInCurrentNode(String fileName) throws Exception {
 
-            //Node myNode = nodeHandler.getMyNode();
+        log.info("Search FileIn Current Node Request: {}", fileName);
+
+        return fileStorage.getAvailableFiles(fileName);
+
+
+    }
+
+    public boolean searchFileInCurrentNode(String fileName, String[] replyTmp, int port, String ip, int hops) throws Exception {
 
             log.info("Search FileIn Current Node Request: {}", fileName);
-            if (fileStorage.isFileAvailable(fileName)) {
+
+            List<String> availableFiles = fileStorage.getAvailableFiles(fileName);
+
+            if (!availableFiles.isEmpty()) {
+                String fileListStr = "";
+                for (String file: availableFiles) {
+                    fileListStr += file+" ";
+                }
+                fileListStr = fileListStr.substring(0,fileListStr.length()-1);
+
                 //  search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
-                String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(1, ip, port, hops, fileName).toString();
+                String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(availableFiles.size(), ip, port, hops, fileListStr).toString();
                 log.info("Success Reply: {}", msg);
                 replyTmp[0] = msg;
                 return true;
@@ -61,10 +77,8 @@ public class SearchFileService {
 
         public boolean sendSearchData(String msg, String targetIp, int targetPort){
             try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
                 String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
-
-                log.info(reply.toString());
+                log.info(reply);
             }catch (Exception e){
                 log.error("Failed to SEARCH Recursive");
             }
@@ -73,29 +87,19 @@ public class SearchFileService {
         }
 
 
-        public String ReqursiveSearchCall(String requestIp, int requestPort, String keyword, int hops, String uniqId, String incomingIP, int incomingPort){
-            String replyG = "Sent to all neigours";
+        public String recursiveSearchCall(String requestIp, int requestPort, String keyword, int hops, String uniqId, String incomingIP, int incomingPort){
+            String reply = "Sent to all neighbours";
 
             if(hops <= 0) {
-                return replyG;
+                return reply;
             }
             for (Node n: routeTable.getNeighbours()) {
-                String reply;
                 if(n.getIpAddress() == incomingIP && n.getPort() == incomingPort){
                     continue;
                 }
                 reply = searchWithStringReply(requestIp, requestPort, keyword, hops, n.getIpAddress(), n.getPort(), uniqId);
-                //"SEROK {No of Files} {ip} {port} {hops} {file names}"
-                /*if(reply == null){
-                    continue;
-                }
-                String[] msgData = reply.split(" ");
-                String command = msgData[1];
-                if(command == "SEROK"){
-                    return reply;
-                }*/
             }
-            return replyG;
+            return reply;
         }
 
 
@@ -106,18 +110,15 @@ public class SearchFileService {
         }
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchMsg()).buildAndExpand(requestIp,requestPort,keyword,hops, uniqId).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
-        log.info("search msg Reqursive: {} to {}:{} with {} ", msg,  targetIp, targetPort, uniqId);
+        log.info("search msg Recursive: {} to {}:{} with {} ", msg,  targetIp, targetPort, uniqId);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
-
-            log.info(reply.toString());
-
+            log.info(reply);
             return reply;
-
 
         }catch (Exception e){
             log.error("Failed to SEARCH Recursive");
+            e.printStackTrace();
         }
         return null;
 

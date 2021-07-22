@@ -1,11 +1,10 @@
 package com.uom.msc.cse.ds.kasper.application.controller;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-import com.uom.msc.cse.ds.kasper.application.domain.service.DomainFileSearch;
 import com.uom.msc.cse.ds.kasper.dto.*;
 import com.uom.msc.cse.ds.kasper.application.init.FileStorageInitializer;
 import com.uom.msc.cse.ds.kasper.service.NodeHandlerService;
-import com.uom.msc.cse.ds.kasper.service.SearchResult;
+import com.uom.msc.cse.ds.kasper.service.SearchResultService;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,6 @@ public class FileController {
     @Autowired
     private ServletWebServerApplicationContext webServerAppCtxt;
 
-    @Autowired
-    DomainFileSearch domainFileSearch;
 
     @Autowired
     RouteTable routeTable;
@@ -51,21 +48,27 @@ public class FileController {
     YAMLConfig yamlConfig;
 
     @Autowired
-    SearchResult searchResult;
+    SearchResultService searchResultService;
 
 
     @PostMapping("/searchFile")
-    public SearchFileResponse searchFile(@RequestParam("fileName") String fileName) {
+    public SearchFileResponse searchFile(@RequestParam("fileName") String fileName) throws Exception {
 
-
+        List<String> fileNames = nodeHandlerService.searchOwn(fileName);
+        if(fileNames != null && !fileNames.isEmpty()){
+            return new SearchFileResponse(fileNames.get(0), nodeHandlerService.getMyNode().getIpAddress(), Integer.toString(nodeHandlerService.getMyNode().getPort()));
+        }
 
         nodeHandlerService.doSearch(fileName,yamlConfig.getHops());
         while (true){
-            if(!searchResult.getFileSearchResponse().isEmpty()){
+            if(!searchResultService.getFileSearchResponse().isEmpty()){
                 break;
             }
         }
-        FileSearchResponse fr = searchResult.getFileSearchResponse().get(0);
+
+        FileSearchResponse fr = searchResultService.getFileSearchResponse().get(0);
+
+        log.info("Search Result : {}",fr.getFiles().toString());
         if(fr != null){
             return new SearchFileResponse(fr.getFiles().get(0), fr.getIp(), Integer.toString(fr.getPort()));
         }
@@ -80,8 +83,8 @@ public class FileController {
 
         nodeHandlerService.download(ip,port,fileName);
 
-
         return new SearchFileResponse(fileName, "", "");
+
     }
 
     @PostMapping("/uploadFile")

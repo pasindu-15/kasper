@@ -1,6 +1,5 @@
 package com.uom.msc.cse.ds.kasper.external.request;
 
-import com.uom.msc.cse.ds.kasper.dto.File;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 

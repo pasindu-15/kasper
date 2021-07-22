@@ -1,18 +1,25 @@
-package com.uom.msc.cse.ds.kasper.external.request.socket;
+package com.uom.msc.cse.ds.kasper.external.request;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-import com.uom.msc.cse.ds.kasper.dto.File;
+import com.uom.msc.cse.ds.kasper.application.init.FileStorageInitializer;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
+import com.uom.msc.cse.ds.kasper.external.adapter.RestClient;
 import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.external.adapter.SocketClient;
 import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.File;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 
@@ -27,6 +34,13 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
     @Autowired
     SocketClient socketClient;
+
+
+    @Autowired
+    RestClient restClient;
+
+    @Autowired
+    FileStorageInitializer fileStorageInitializer;
 
 
     public List<InetSocketAddress> register(Node myNode){
@@ -96,6 +110,29 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
     }
 
+    @Override
+    public void fileDownload(String fileName, String targetIp, int targetPort){
+        String url = UriComponentsBuilder.fromPath(yamlConfig.getUrl()).buildAndExpand(targetIp,targetPort,fileName).toString();
+//
+        try{
+            Resource resource = restClient.send(url,fileName);
+
+            InputStream is = resource.getInputStream();
+
+            File targetFile = new File(String.format("{}/{}",fileStorageInitializer.getDownloadFileStorageLocation().toString(),fileName));
+
+            Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+
+            IOUtils.closeQuietly(is);
+
+            log.info("Successfully File downloaded");
+
+        }catch (Exception e){
+            log.error("Failed to Download");
+        }
+    }
+
 
     public FileSearchResponse search(Node myNode, String keyword,int hops, String targetIp, int targetPort, String uniqIdForSearch){
 
@@ -110,7 +147,6 @@ public class SocketRequestHandler implements RequestHandlerInterface {
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
             FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
 
-            log.info(fileSearchResponse.toString());
 
             return fileSearchResponse;
 
@@ -147,7 +183,6 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         msg = String.format("%04d %s",msg.length() + 5,msg);
         log.info("search msg: {}", msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
 
             log.info(reply.toString());
