@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Log4j2
 @RestController
@@ -52,15 +51,6 @@ public class UIController {
 
     @PostMapping("/searchFile")
     public FileSearchResponse searchFile(@RequestParam("fileName") String fileName) throws Exception {
-
-        List<String> fileNames = nodeHandlerService.searchOwn(fileName);
-        if (fileNames != null && !fileNames.isEmpty()) {
-            FileSearchResponse fr = new FileSearchResponse();
-            fr.setIp(nodeHandlerService.getMyNode().getIpAddress());
-            fr.setPort(nodeHandlerService.getMyNode().getPort());
-            fr.setFiles(fileNames);
-            return fr;
-        }
 
         nodeHandlerService.doSearch(fileName, yamlConfig.getHops());
         while (true) {
@@ -99,7 +89,7 @@ public class UIController {
             Arrays.asList(files)
                     .parallelStream()
                     .forEach(file -> fileStorageService.storeFile(file));
-            fileStorageService.updateRandomFilesFromLoacal();
+            fileStorageService.updateRandomFilesFromLocal();
         } catch (FileStorageException e) {
             return ResponseEntity.badRequest().body("FAIL");
         }

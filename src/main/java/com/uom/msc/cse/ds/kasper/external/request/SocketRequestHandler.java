@@ -130,7 +130,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
         }catch (Exception e){
             e.printStackTrace();
-            log.error("Failed to Download");
+            log.error("Failed to Download - Unsupported FIle Format");
         }
     }
 

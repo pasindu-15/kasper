@@ -25,6 +25,12 @@ public class NodeHandlerService {
 
     SocketServer socketServer;
 
+    @Autowired
+    SearchFileService searchFileService;
+
+    @Autowired
+    SearchResultService searchResultService;
+
     public NodeHandlerService(RouteTable routeTable, RequestHandlerInterface requestHandler, SocketServer socketServer) {
         this.routeTable =routeTable;
         this.requestHandler = requestHandler;
@@ -84,11 +90,7 @@ public class NodeHandlerService {
 
     }
 
-    @Autowired
-    SearchFileService searchFileService;
 
-    @Autowired
-    SearchResultService searchResultService;
 
 
     /**
@@ -105,21 +107,37 @@ public class NodeHandlerService {
         return null;
     }
 
-    public FileSearchResponse doSearch(String keyword, int hops){
+    public void doSearch(String keyword, int hops){
 
+        searchResultService.getFileSearchResponse().clear();
         log.info("Input Search String {}", keyword);
-        String uniqueID = UUID.randomUUID().toString();
-        String uniqIdForSearch = "search"+uniqueID;
-        searchResultService.cleanSearchResponse();
-        searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
-        for (Node n: routeTable.getNeighbours()) {
-            FileSearchResponse fr  = requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
+        boolean isFoundInLocal = searchFilesOnLocalDrive(keyword);
 
-            if(fr != null && fr.getFiles() != null){
-                break;
+        if(!isFoundInLocal){
+            String uniqueID = UUID.randomUUID().toString();
+            String uniqIdForSearch = "search"+uniqueID;
+            searchResultService.cleanSearchResponse();
+            searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
+            for (Node n: routeTable.getNeighbours()) {
+                requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
+
+//            if(fr != null && fr.getFiles() != null){
+//                break;
+//            }
             }
         }
-        return null;
+
+//        String uniqueID = UUID.randomUUID().toString();
+//        String uniqIdForSearch = "search"+uniqueID;
+//        searchResultService.cleanSearchResponse();
+//        searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
+//        for (Node n: routeTable.getNeighbours()) {
+//            requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
+//
+////            if(fr != null && fr.getFiles() != null){
+////                break;
+////            }
+//        }
     }
 
 
@@ -129,6 +147,28 @@ public class NodeHandlerService {
 
     public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
         return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
+    }
+
+    private boolean searchFilesOnLocalDrive(String keyword){
+        List<String> fileNames = null;
+        try {
+            fileNames = searchFileService.searchFileInCurrentNode(keyword);
+
+            if (fileNames != null && !fileNames.isEmpty()) {
+                FileSearchResponse fr = new FileSearchResponse();
+                fr.setIp(getMyNode().getIpAddress());
+                fr.setPort(getMyNode().getPort());
+                fr.setFiles(fileNames);
+                List<FileSearchResponse> searchResponses = new ArrayList<>();
+                searchResponses.add(fr);
+                searchResultService.setFileSearchResponse(searchResponses);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 
 }

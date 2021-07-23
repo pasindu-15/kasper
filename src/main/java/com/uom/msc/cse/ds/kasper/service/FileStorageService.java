@@ -59,7 +59,7 @@ public class FileStorageService {
         }
 
 
-        updateRandomFilesFromLoacal();
+        updateRandomFilesFromLocal();
 
         log.info("Contains Files : {}", randomFileLst);
     }
@@ -101,7 +101,7 @@ public class FileStorageService {
 
 
 
-    public void updateRandomFilesFromLoacal() {
+    public void updateRandomFilesFromLocal() {
 
         randomFileLst.clear();
         Set<String> fileList =  Stream.of(new File(yamlConfig.getUploadDir()).listFiles())
@@ -113,10 +113,11 @@ public class FileStorageService {
 
         List<String> list = new ArrayList<String>(fileList);
         Collections.shuffle(list);
+        list.remove(null);
         int desiredFileCount = rnd.nextInt(2)+3;
         int subLstFileCount = Integer.min(desiredFileCount,list.size());
         List<String> fileNames =  list.subList(0, subLstFileCount);
-        fileNames.parallelStream().forEach(lst -> randomFileLst.add(lst));
+        fileNames.parallelStream().forEach(f -> randomFileLst.add(f));
 
         log.info("Local Drive Updated {} ",randomFileLst.toString());
 

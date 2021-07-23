@@ -23,7 +23,7 @@ public class SearchResultService {
 
     private ResponseHandler responseHandler;
 
-    private ArrayList<FileSearchResponse> fileSearchResponse;
+    private List<FileSearchResponse> fileSearchResponse;
 
     public SearchResultService(ResponseHandler responseHandler, ArrayList<FileSearchResponse> fileSearchResponse) {
         this.responseHandler = responseHandler;
