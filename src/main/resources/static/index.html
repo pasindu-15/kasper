@@ -14,29 +14,16 @@
             <div class="upload-header">
                 <h2>Kasper File Sharing System</h2>
             </div>
-            <div class="col-md-2" align="right">
-                <form id="leave-form" name="leave-form">
-                    <!--                    <input type="submit" class="btn btn-primary-red" value="Leave" >-->
-                    <button type="submit" class="btn btn-primary-red">Leave</button>
-                </form>
-                <div class="leave-response">
-                    <div id="leave-error"></div>
-                    <div id="leave-success"></div>
-                </div>
+            <div class="topnav">
+                <a class="active" href="javascript:gotohome();">Home</a>
+                <a href="javascript:gotoaboutus();">About Us</a>
             </div>
             <div class="upload-content">
                 <div class="search-file">
                     <h3>Search File</h3>
                     <form id="searchFileForm" name="searchFileForm">
-                        <div class="row">
-                            <div class="form-group col-md-10">
-                                <input id="searchFileFormInput" type="text" name="file" class="file-input" required />
-                            </div>
-                            <div class="form-group col-md-2">
-                                <button type="submit" class="primary submit-btn">Search</button>
-                            </div>
-                        </div>
-
+                        <input id="searchFileFormInput" type="text" name="file" class="file-input" required />
+                        <button type="submit" class="primary submit-btn">Search</button>
                     </form>
                     <div class="search-file-response">
                         <div id="searchFileError"></div>
@@ -53,6 +40,16 @@
                     <div class="upload-response">
                         <div id="multipleFileUploadError"></div>
                         <div id="multipleFileUploadSuccess"></div>
+                    </div>
+                </div>
+                <div class="leave">
+                    <h3>Leave</h3>
+                    <form id="leaveForm" name="leaveFileForm">
+                        <button type="submit" class="primary leave-btn">Leave</button>
+                    </form>
+                    <div class="leave-response">
+                        <div id="leaveError"></div>
+                        <div id="leaveSuccess"></div>
                     </div>
                 </div>
             </div>

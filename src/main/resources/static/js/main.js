@@ -1,8 +1,8 @@
 'use strict';
 
-var leaveForm = document.querySelector('#leave-form');
-var leaveError = document.querySelector('#leave-error');
-var leaveSuccess = document.querySelector('#leave-success');
+var leaveForm = document.querySelector('#leaveForm');
+var leaveError = document.querySelector('#leaveError');
+var leaveSuccess = document.querySelector('#leaveSuccess');
 
 var searchFileForm = document.querySelector('#searchFileForm');
 var searchFileFormInput = document.querySelector('#searchFileFormInput');
@@ -11,18 +11,12 @@ var searchFileSuccess = document.querySelector('#searchFileSuccess');
 
 var downloadFileForm = document.querySelector('#downloadFileForm');
 
-//var singleUploadForm = document.querySelector('#singleUploadForm');
-//var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
-//var singleFileUploadError = document.querySelector('#singleFileUploadError');
-//var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
-
 var multipleUploadForm = document.querySelector('#multipleUploadForm');
 var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
 var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
 var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
 
 var fileSearchResponse = null;
-
 
 function searchFile(file) {
     var formData = new FormData();
@@ -37,13 +31,10 @@ function searchFile(file) {
         if(xhr.status == 200) {
             searchFileError.style.display = "none";
             searchFileSuccess.innerHTML = "<p>File search success!</p>";
-            var content = '<fieldset><legend>Choose File</legend>';
-
+            var content = '<fieldset class="file-choose-fieldset"><legend>Choose File</legend>';
             for(var index=0; index < fileSearchResponse.files.length; index++){
                 content += '<div><input type="radio" id='+index+' name="fileDownloadChoice" value="fileName"><label for="fileName">' + fileSearchResponse.files[index] + '</label></div>';
             }
-//            content += '<div><input type="radio" id="dowloadFile1" name="fileDownloadChoice" value="fileName"><label for="fileName">' + fileSearchResponse.fileName + '</label></div>';
-//            content += '<div><input type="radio" id="dowloadFile2" name="fileDownloadChoice" value="fileName"><label for="fileName">' + fileSearchResponse.fileName + '</label></div>';
             content += '<div><button type="submit" class="primary submit-btn">Download</button></div></fieldset>';
             downloadFileForm.innerHTML = content;
             searchFileSuccess.style.display = "block";
@@ -72,8 +63,9 @@ function downloadFile(fileName,ipAddress,portID) {
         fileSearchResponse = JSON.parse(xhr.responseText);
         if(xhr.status == 200) {
             searchFileError.style.display = "none";
-            searchFileSuccess.innerHTML = "<p>File download success!</p>";
-            searchFileSuccess.style.display = "block";
+            searchFileSuccess.style.display = "none";
+            alert("File Downloaded Successfully!");
+            gohome();
         } else {
             searchFileSuccess.style.display = "none";
             downloadFileForm.style.display = "none";
@@ -106,33 +98,6 @@ function leave(){
         xhr.send(formData);
 }
 
-leaveForm.addEventListener('submit', function(event){
-   leave();
-}, true);
-
-function uploadSingleFile(file) {
-    var formData = new FormData();
-    formData.append("file", file);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/uploadFile");
-
-    xhr.onload = function() {
-        console.log(xhr.responseText);
-        var response = JSON.parse(xhr.responseText);
-        if(xhr.status == 200) {
-            singleFileUploadError.style.display = "none";
-            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
-            singleFileUploadSuccess.style.display = "block";
-        } else {
-            singleFileUploadSuccess.style.display = "none";
-            singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
-        }
-    }
-
-    xhr.send(formData);
-}
-
 function uploadMultipleFiles(files) {
     var formData = new FormData();
     for(var index = 0; index < files.length; index++) {
@@ -147,10 +112,9 @@ function uploadMultipleFiles(files) {
         var response = xhr.responseText;
         if(xhr.status == 200) {
             multipleFileUploadError.style.display = "none";
-            var content = "<p>Files Uploaded Successfully</p>";
-
-            multipleFileUploadSuccess.innerHTML = content;
-            multipleFileUploadSuccess.style.display = "block";
+            multipleFileUploadSuccess.style.display = "none";
+            alert("Files Uploaded Successfully");
+            gohome();
         } else {
             multipleFileUploadSuccess.style.display = "none";
             multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
@@ -160,6 +124,17 @@ function uploadMultipleFiles(files) {
     xhr.send(formData);
 }
 
+function gotohome(){
+    window.location.href="./index.html"
+}
+
+function gotoaboutus(){
+    window.location.href="./about.html"
+}
+
+leaveForm.addEventListener('submit', function(event){
+   leave();
+}, true);
 
 
 searchFileForm.addEventListener('submit', function(event){
@@ -172,8 +147,8 @@ searchFileForm.addEventListener('submit', function(event){
     event.preventDefault();
 }, true);
 
-downloadFileForm.addEventListener('submit', function(event){
 
+downloadFileForm.addEventListener('submit', function(event){
     const rbs = document.querySelectorAll('input[name="fileDownloadChoice"]');
     let fileIndex;
     for (const rb of rbs) {
@@ -182,29 +157,9 @@ downloadFileForm.addEventListener('submit', function(event){
             break;
         }
     }
-
-    alert(fileSearchResponse.files[fileIndex]);
-
     downloadFile(fileSearchResponse.files[fileIndex], fileSearchResponse.ip, fileSearchResponse.port)
-
-//    var fileName = searchFileFormInput.value;
-//    if(fileName.length === 0) {
-//        searchFileError.innerHTML = "Please select a file name!";
-//        searchFileError.style.display = "block";
-//    }
-//    searchFile(fileName);
     event.preventDefault();
 }, true);
-
-//singleUploadForm.addEventListener('submit', function(event){
-//    var files = singleFileUploadInput.files;
-//    if(files.length === 0) {
-//        singleFileUploadError.innerHTML = "Please select a file";
-//        singleFileUploadError.style.display = "block";
-//    }
-//    uploadSingleFile(files[0]);
-//    event.preventDefault();
-//}, true);
 
 
 multipleUploadForm.addEventListener('submit', function(event){
