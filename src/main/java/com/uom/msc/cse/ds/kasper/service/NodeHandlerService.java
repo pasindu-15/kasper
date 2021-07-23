@@ -36,6 +36,11 @@ public class NodeHandlerService {
         return this.node;
     }
 
+    /**
+     *
+     * @param myPort
+     * @throws Exception
+     */
     public void init(int myPort) throws Exception {
 
         this.node = new Node(myPort);
@@ -44,6 +49,9 @@ public class NodeHandlerService {
 
     }
 
+    /**
+     *
+     */
     private void addToOwnRouteTable(){
         List<Node> neighbours = new ArrayList<>();
         List<InetSocketAddress> targets = targets = requestHandler.register(this.node);
@@ -63,6 +71,9 @@ public class NodeHandlerService {
         }
     }
 
+    /**
+     *
+     */
     public void removeFromOwnRouteTable() {
 
         boolean res = requestHandler.unRegister(this.node);
@@ -79,6 +90,12 @@ public class NodeHandlerService {
     @Autowired
     SearchResultService searchResultService;
 
+
+    /**
+     *
+     * @param keyword
+     * @return
+     */
     public List<String> searchOwn(String keyword){
         try {
             return searchFileService.searchFileInCurrentNode(keyword);

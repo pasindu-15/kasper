@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 @Configuration
 @EnableConfigurationProperties
@@ -29,6 +30,9 @@ public class YAMLConfig {
 
     @Value("${node.req-url}")
     private String url;
+
+    @Value("${node.req-protocol}")
+    private String protocol;
 
     @Value("${search.hops}")
     private int hops;

@@ -13,7 +13,8 @@ socket:
   timeout: 10000
 
 node:
-  req-url: "http://{ip}:{port}/${base-url.context}/downloadFile/{file}"
+  req-protocol: "http://"
+  req-url: "{ip}:{port}/${base-url.context}/downloadFile/{file}"
 
 ## MULTIPART (MultipartProperties)
 # Enable multipart uploads
@@ -28,8 +29,8 @@ spring.servlet.multipart.max-request-size: 215MB
 ## File Storage Properties
 # Please change this to the path where you want the uploaded files to be stored.
 file:
-  upload-dir: "classpath:/drive"
-  download-dir: "classpath:/downloads"
+  upload-dir: "./drive"
+  download-dir: "./downloads"
 
 search:
   hops: 5

@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 
 @Service
@@ -22,7 +21,7 @@ public class SearchFileService {
         RouteTable routeTable;
 
         @Autowired
-        FileStorage fileStorage;
+        FileStorageService fileStorage;
 
         @Autowired
         YAMLConfig yamlConfig;
@@ -48,7 +47,7 @@ public class SearchFileService {
 
         log.info("Search FileIn Current Node Request: {}", fileName);
 
-        return fileStorage.getAvailableFiles(fileName);
+        return fileStorage.getAvailableFilesByKeyword(fileName);
 
 
     }
@@ -57,7 +56,7 @@ public class SearchFileService {
 
             log.info("Search FileIn Current Node Request: {}", fileName);
 
-            List<String> availableFiles = fileStorage.getAvailableFiles(fileName);
+            List<String> availableFiles = fileStorage.getAvailableFilesByKeyword(fileName);
 
             if (!availableFiles.isEmpty()) {
                 String fileListStr = "";

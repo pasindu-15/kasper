@@ -1,10 +1,9 @@
 package com.uom.msc.cse.ds.kasper.external.request;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-import com.uom.msc.cse.ds.kasper.application.init.FileStorageInitializer;
+import com.uom.msc.cse.ds.kasper.service.FileStorageService;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.external.adapter.RestClient;
-import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
 import com.uom.msc.cse.ds.kasper.dto.Node;
 import com.uom.msc.cse.ds.kasper.external.adapter.SocketClient;
 import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
@@ -40,7 +39,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
     RestClient restClient;
 
     @Autowired
-    FileStorageInitializer fileStorageInitializer;
+    FileStorageService fileStorageService;
 
 
     public List<InetSocketAddress> register(Node myNode){
@@ -112,14 +111,15 @@ public class SocketRequestHandler implements RequestHandlerInterface {
 
     @Override
     public void fileDownload(String fileName, String targetIp, int targetPort){
-        String url = UriComponentsBuilder.fromPath(yamlConfig.getUrl()).buildAndExpand(targetIp,targetPort,fileName).toString();
-//
+        String url = yamlConfig.getProtocol()+UriComponentsBuilder.fromPath(yamlConfig.getUrl()).buildAndExpand(targetIp,targetPort,fileName).toString();
+
+        log.info("DOWNLOAD URL : {}",url);
         try{
             Resource resource = restClient.send(url,fileName);
 
             InputStream is = resource.getInputStream();
 
-            File targetFile = new File(String.format("{}/{}",fileStorageInitializer.getDownloadFileStorageLocation().toString(),fileName));
+            File targetFile = new File(fileStorageService.getDownloadFileStorageLocation().toString()+"/"+fileName);
 
             Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -129,6 +129,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
             log.info("Successfully File downloaded");
 
         }catch (Exception e){
+            e.printStackTrace();
             log.error("Failed to Download");
         }
     }

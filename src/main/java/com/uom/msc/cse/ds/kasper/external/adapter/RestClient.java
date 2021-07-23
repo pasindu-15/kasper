@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 @Service
 @Log4j2
@@ -41,6 +42,16 @@ public class RestClient {
 //
 //        return response;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+//        ResponseEntity<byte[]> response = restTemplate.build()
+//                .exchange("http://localhost:8080/downloadFile", HttpMethod.GET, entity, byte[].class);
+//        Files.write(Paths.get("e:\\download-files\\demo1.pdf"), response.getBody());
+
+
+
+
 
         URI uri = null;
         try {
@@ -49,7 +60,7 @@ public class RestClient {
             e.printStackTrace();
         }
 
-        ResponseEntity<Resource> responseEntity = restTemplate.exchange( uri, HttpMethod.GET, null, Resource.class );
+        ResponseEntity<Resource> responseEntity = restTemplate.exchange( uri, HttpMethod.GET, entity, Resource.class );
 
         Resource resource = responseEntity.getBody();
 

@@ -1,9 +1,10 @@
-package com.uom.msc.cse.ds.kasper.application.init;
+package com.uom.msc.cse.ds.kasper.service;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.application.exception.FileStorageException;
 import com.uom.msc.cse.ds.kasper.application.exception.MyFileNotFoundException;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,18 +19,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
-public class FileStorageInitializer {
+@Log4j2
+public class FileStorageService {
 
     @Getter
     private final Path localFileStorageLocation;
     @Getter
     private final Path downloadFileStorageLocation;
 
+    YAMLConfig yamlConfig;
+
+    List<String> randomFileLst;
 
     @Autowired
-    public FileStorageInitializer(YAMLConfig yamlConfig) {
+    public FileStorageService(YAMLConfig yamlConfig) {
+        this.yamlConfig = yamlConfig;
+        this.randomFileLst = new ArrayList();
 
         this.localFileStorageLocation = Paths.get(yamlConfig.getUploadDir())
                 .toAbsolutePath().normalize();
@@ -47,6 +57,11 @@ public class FileStorageInitializer {
         } catch (Exception ex) {
             throw new FileStorageException("Could not create the directory where the downloaded files will be stored.", ex);
         }
+
+
+        updateRandomFilesFromLoacal();
+
+        log.info("Contains Files : {}", randomFileLst);
     }
 
     public String storeFile(MultipartFile file) {
@@ -63,7 +78,8 @@ public class FileStorageInitializer {
             Path targetLocation = this.localFileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileName;
+
+            return "SUCCESS";
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
@@ -81,5 +97,32 @@ public class FileStorageInitializer {
         } catch (MalformedURLException ex) {
             throw new MyFileNotFoundException("File not found " + fileName, ex);
         }
+    }
+
+
+
+    public void updateRandomFilesFromLoacal() {
+
+        randomFileLst.clear();
+        Set<String> fileList =  Stream.of(new File(yamlConfig.getUploadDir()).listFiles())
+                .filter(file -> !file.isDirectory())
+                .map(File::getName)
+                .collect(Collectors.toSet());
+
+        Random rnd = new Random();
+
+        List<String> list = new ArrayList<String>(fileList);
+        Collections.shuffle(list);
+        int desiredFileCount = rnd.nextInt(2)+3;
+        int subLstFileCount = Integer.min(desiredFileCount,list.size());
+        List<String> fileNames =  list.subList(0, subLstFileCount);
+        fileNames.parallelStream().forEach(lst -> randomFileLst.add(lst));
+
+        log.info("Local Drive Updated {} ",randomFileLst.toString());
+
+    }
+
+    public List<String> getAvailableFilesByKeyword(String keyword){
+        return randomFileLst.parallelStream().filter(fileName -> fileName.contains(keyword)).collect(Collectors.toList());
     }
 }

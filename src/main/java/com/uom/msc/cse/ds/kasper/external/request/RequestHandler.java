@@ -1,7 +1,7 @@
 //package com.uom.msc.cse.ds.kasper.external.request;
 //
 //import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-//import com.uom.msc.cse.ds.kasper.application.init.FileStorageInitializer;
+//import com.uom.msc.cse.ds.kasper.service.FileStorageService;
 //import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 //import com.uom.msc.cse.ds.kasper.external.adapter.RestClient;
 //import com.uom.msc.cse.ds.kasper.external.request.RequestHandlerInterface;
@@ -39,7 +39,7 @@
 //    RestClient restClient;
 //
 //    @Autowired
-//    FileStorageInitializer fileStorageInitializer;
+//    FileStorageService fileStorageService;
 //
 //
 //    public List<InetSocketAddress> register(Node myNode){
@@ -139,7 +139,7 @@
 //
 //            InputStream is = resource.getInputStream();
 //
-//            java.io.File targetFile = new File(String.format("{}/{}",fileStorageInitializer.getDownloadFileStorageLocation().toString(),fileName));
+//            java.io.File targetFile = new File(String.format("{}/{}",fileStorageService.getDownloadFileStorageLocation().toString(),fileName));
 //
 //            Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 //
