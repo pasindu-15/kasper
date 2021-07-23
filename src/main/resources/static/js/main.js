@@ -32,10 +32,11 @@ function searchFile(file) {
             searchFileError.style.display = "none";
             searchFileSuccess.innerHTML = "<p>File search success!</p>";
             var content = '<fieldset class="file-choose-fieldset"><legend>Choose File</legend>';
+            content += '<div><table id="files"><tr><th>Select</th><th>File Name</th><th>Ip Address</th><th>Port</th></tr>';
             for(var index=0; index < fileSearchResponse.files.length; index++){
-                content += '<div><input type="radio" id='+index+' name="fileDownloadChoice" value="fileName"><label for="fileName">' + fileSearchResponse.files[index] + '</label></div>';
+                content += '<tr><td><input type="radio" id='+index+' name="fileDownloadChoice"></td><td>' + fileSearchResponse.files[index] + '</td><td>' + fileSearchResponse.ip + '</td><td>' + fileSearchResponse.port + '</td></tr>';
             }
-            content += '<div><button type="submit" class="primary submit-btn">Download</button></div></fieldset>';
+            content += '</table><div><button type="submit" class="primary submit-btn">Download</button></div></fieldset>';
             downloadFileForm.innerHTML = content;
             searchFileSuccess.style.display = "block";
             downloadFileForm.style.display = "block";
@@ -64,6 +65,8 @@ function downloadFile(fileName,ipAddress,portID) {
         if(xhr.status == 200) {
             searchFileError.style.display = "none";
             searchFileSuccess.style.display = "none";
+            searchFileFormInput.value = "";
+            downloadFileForm.style.display = "none";
             alert("File Downloaded Successfully!");
             gohome();
         } else {
@@ -113,6 +116,7 @@ function uploadMultipleFiles(files) {
         if(xhr.status == 200) {
             multipleFileUploadError.style.display = "none";
             multipleFileUploadSuccess.style.display = "none";
+            multipleFileUploadInput.value = "";
             alert("Files Uploaded Successfully");
             gohome();
         } else {
@@ -125,6 +129,13 @@ function uploadMultipleFiles(files) {
 }
 
 function gotohome(){
+    searchFileError.style.display = "none";
+    searchFileSuccess.style.display = "none";
+    searchFileFormInput.value = "";
+    downloadFileForm.style.display = "none";
+    multipleFileUploadError.style.display = "none";
+    multipleFileUploadSuccess.style.display = "none";
+    multipleFileUploadInput.value = "";
     window.location.href="./index.html"
 }
 
