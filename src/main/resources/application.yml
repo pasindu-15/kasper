@@ -10,7 +10,7 @@ bootstrap:
 log:
   identifierKey: UUID
 socket:
-  timeout: 10000
+  timeout: 20000
 
 node:
   req-protocol: "http://"
@@ -33,7 +33,7 @@ file:
   download-dir: "./downloads"
 
 search:
-  hops: 5
+  hops: 10
 msg:
   register: "REG {ip} {port} {username}"
   un-register: "UNREG {ip} {port} {username}"

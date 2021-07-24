@@ -51,18 +51,28 @@ public class UIController {
 
     @PostMapping("/searchFile")
     public FileSearchResponse searchFile(@RequestParam("fileName") String fileName) throws Exception {
-
+        long startTime = System.currentTimeMillis();
         nodeHandlerService.doSearch(fileName, yamlConfig.getHops());
-        while (true) {
-            if (!searchResultService.getFileSearchResponse().isEmpty()) {
+
+//        do{
+//            if (!searchResultService.getFileSearchResponse().isEmpty()) {
+//                break;
+//            }
+//        }while ((System.currentTimeMillis()-startTime)<10000);
+
+        while (true){
+            if ((System.currentTimeMillis()-startTime)>10000 || !searchResultService.getFileSearchResponse().isEmpty()) {
                 break;
             }
         }
 
-        FileSearchResponse fr = searchResultService.getFileSearchResponse().get(0);
 
-        log.info("Search Result : {}", fr.getFiles().toString());
+        FileSearchResponse fr = searchResultService.getFileSearchResponse().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
+
+
         if (fr != null) {
+            log.info("Search Result : {}", fr.getFiles().toString());
+            log.info("SEARCH RESPONSE TIME : {}",(System.currentTimeMillis()-startTime));
             return fr;
         }
 

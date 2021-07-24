@@ -128,6 +128,10 @@ function uploadMultipleFiles(files) {
     xhr.send(formData);
 }
 
+function goBackToHome(){
+    window.location.href="./index.html"
+}
+
 function gotohome(){
     searchFileError.style.display = "none";
     searchFileSuccess.style.display = "none";

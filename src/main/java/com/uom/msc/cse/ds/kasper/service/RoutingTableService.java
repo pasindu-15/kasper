@@ -29,7 +29,7 @@ public class RoutingTableService {
             log.info("AFTER UPDATE :"+routeTable.getNeighbours().toString());
         }
 
-
+        log.info("NEIGHBOURS COUNT : {}",routeTable.getNeighbours().size());
         return true;
     }
 
@@ -46,6 +46,7 @@ public class RoutingTableService {
             log.info("AFTER REMOVE :"+routeTable.getNeighbours().toString());
         }
 
+        log.info("NEIGHBOURS COUNT : {}",routeTable.getNeighbours().size());
         return true;
     }
 

@@ -109,7 +109,6 @@ public class NodeHandlerService {
 
     public void doSearch(String keyword, int hops){
 
-        searchResultService.getFileSearchResponse().clear();
         log.info("Input Search String {}", keyword);
         boolean isFoundInLocal = searchFilesOnLocalDrive(keyword);
 

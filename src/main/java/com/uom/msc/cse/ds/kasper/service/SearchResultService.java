@@ -25,9 +25,9 @@ public class SearchResultService {
 
     private List<FileSearchResponse> fileSearchResponse;
 
-    public SearchResultService(ResponseHandler responseHandler, ArrayList<FileSearchResponse> fileSearchResponse) {
+    public SearchResultService(ResponseHandler responseHandler ) {
         this.responseHandler = responseHandler;
-        this.fileSearchResponse = fileSearchResponse;
+        this.fileSearchResponse = new ArrayList<>();
     }
 
 
@@ -40,6 +40,8 @@ public class SearchResultService {
         log.info("Search File Response : {} " , reply);
         try{
             FileSearchResponse fileSearchResponseTmp = responseHandler.handleSearchResponse(reply);
+
+
             fileSearchResponse.add(fileSearchResponseTmp);
         }catch (Exception e){
             log.error("Search Failed {}",e.getMessage());

@@ -113,7 +113,7 @@ public class FileStorageService {
 
         List<String> list = new ArrayList<String>(fileList);
         Collections.shuffle(list);
-        list.remove(null);
+        list.removeAll(Collections.singleton(null));
         int desiredFileCount = rnd.nextInt(2)+3;
         int subLstFileCount = Integer.min(desiredFileCount,list.size());
         List<String> fileNames =  list.subList(0, subLstFileCount);

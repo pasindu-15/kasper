@@ -28,7 +28,7 @@ public class SocketClient{
         DatagramPacket sendingPacket = new DatagramPacket(request.getBytes(),
                 request.length(), InetAddress.getByName(targetIp),targetPort);
 
-        datagramSocket.setSoTimeout(yamlConfig.getTimeout());
+//        datagramSocket.setSoTimeout(yamlConfig.getTimeout());
 
         datagramSocket.send(sendingPacket);
 

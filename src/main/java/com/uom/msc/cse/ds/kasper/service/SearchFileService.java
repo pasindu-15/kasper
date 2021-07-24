@@ -65,6 +65,8 @@ public class SearchFileService {
                 }
                 fileListStr = fileListStr.substring(0,fileListStr.length()-1);
 
+                hops = yamlConfig.getHops()+1 - hops;
+
                 //  search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                 String msg = UriComponentsBuilder.fromPath(yamlConfig.getSearchReply()).buildAndExpand(availableFiles.size(), ip, port, hops, fileListStr).toString();
                 log.info("Success Reply: {}", msg);

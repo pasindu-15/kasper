@@ -33,6 +33,10 @@ public class SocketServer{
     @Autowired
     SearchResultService searchResultService;
 
+    private static int reqCount = 0;
+
+
+
     @Async("threadPoolExecutor")
     public void init(int port, String ip) {
         try {
@@ -54,6 +58,8 @@ public class SocketServer{
 
 
                 log.info("REQ RECEIVED : {}",msg);
+
+                log.info("CUMULATIVE REQ COUNT :{}",++reqCount);
 
 
                 String[] msgData = msg.split(" ");
@@ -80,11 +86,13 @@ public class SocketServer{
                         datagramSocket.send(dpReply);
                         allreadyRepiled = true;
                         isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
-                        if(isSuccess) {
+
+                        boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
+                        if(isNewReq && isSuccess) {
                             reply = tmp[0];
                             reply = String.format("%04d %s", reply.length() + 5 ,reply);
                             searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
-                        } else if(searchFileService.isNewRequest(uniqIdForSearch)){
+                        } else if(isNewReq){
                             String requestIP = msgData[2];
                             int requestPort = Integer.parseInt(msgData[3]);
                             String fileName = msgData[4];
@@ -101,10 +109,12 @@ public class SocketServer{
                                 throw new RuntimeException("Getting address failed");
                             }
                         } else{
-                            reply = "Stopped Reqursive";
+                            reply = "Stopped Recursive";
                         }
-                    case "SEROK" : //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
+                        break;
+                    case "SEROK": //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                         searchResultService.addToSearchResult(msg);
+                        break;
                 }
                 if(!allreadyRepiled) {
                     reply = String.format("%04d %s", reply.length() + 5, reply);
