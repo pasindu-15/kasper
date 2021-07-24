@@ -60,8 +60,10 @@ public class UIController {
 //            }
 //        }while ((System.currentTimeMillis()-startTime)<10000);
 
+        long responseTime;
         while (true){
-            if ((System.currentTimeMillis()-startTime)>10000 || !searchResultService.getFileSearchResponse().isEmpty()) {
+            responseTime = System.currentTimeMillis()-startTime;
+            if (searchResultService.getFileSearchResponse().size() > 0  || responseTime >20000 ) {
                 break;
             }
         }
@@ -70,9 +72,12 @@ public class UIController {
         FileSearchResponse fr = searchResultService.getFileSearchResponse().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
 
 
+        log.info("SEARCH RESPONSE : {}",searchResultService.getFileSearchResponse());
+        log.info("SEARCH RESPONSE TIME : {}",responseTime);
+
         if (fr != null) {
             log.info("Search Result : {}", fr.getFiles().toString());
-            log.info("SEARCH RESPONSE TIME : {}",(System.currentTimeMillis()-startTime));
+
             return fr;
         }
 

@@ -29,7 +29,8 @@ spring.servlet.multipart.max-request-size: 215MB
 ## File Storage Properties
 # Please change this to the path where you want the uploaded files to be stored.
 file:
-  upload-dir: "./drive"
+#  upload-dir: "./drive"
+  upload-dir: "./drive/${driveId}"
   download-dir: "./downloads"
 
 search:
@@ -47,5 +48,7 @@ msg:
 
 file-serch:
   directCall: "Search"
+
+#ent.drive : ${driveId}
 
 

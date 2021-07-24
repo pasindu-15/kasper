@@ -104,26 +104,33 @@ public class FileStorageService {
     public void updateRandomFilesFromLocal() {
 
         randomFileLst.clear();
-        Set<String> fileList =  Stream.of(new File(yamlConfig.getUploadDir()).listFiles())
+        List<String> fileList =  Stream.of(new File(yamlConfig.getUploadDir()).listFiles())
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
-        Random rnd = new Random();
+        log.info("DEFAULT FILES : {}",fileList.toString());
 
-        List<String> list = new ArrayList<String>(fileList);
-        Collections.shuffle(list);
-        list.removeAll(Collections.singleton(null));
-        int desiredFileCount = rnd.nextInt(2)+3;
-        int subLstFileCount = Integer.min(desiredFileCount,list.size());
-        List<String> fileNames =  list.subList(0, subLstFileCount);
-        fileNames.parallelStream().forEach(f -> randomFileLst.add(f));
+//        Random rnd = new Random();
+//
+//        List<String> list = new ArrayList<String>(fileList);
+//        Collections.shuffle(list);
+//        list = list.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
+////        int desiredFileCount = rnd.nextInt(2)+3;
+//        int desiredFileCount = 3;
+//        int subLstFileCount = Integer.min(desiredFileCount,list.size());
+//        List<String> fileNames =  list.subList(0, subLstFileCount);
+//        fileNames.parallelStream().forEach(f -> randomFileLst.add(f));
+//        fileList.parallelStream().forEach(f -> randomFileLst.add(f));
+        randomFileLst = fileList;
 
         log.info("Local Drive Updated {} ",randomFileLst.toString());
 
     }
 
     public List<String> getAvailableFilesByKeyword(String keyword){
+
+        log.info("RAND LIST : {}",randomFileLst.toString());
         return randomFileLst.parallelStream().filter(fileName -> fileName.contains(keyword)).collect(Collectors.toList());
     }
 }

@@ -67,6 +67,9 @@ public class YAMLConfig {
     @Value("${file.download-dir}")
     private String downloadDir;
 
+//    @Value("${ent.driver}")
+//    private String downloadDir;
+
 
 
 
