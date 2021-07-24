@@ -110,12 +110,13 @@ public class NodeHandlerService {
     public void doSearch(String keyword, int hops){
 
         log.info("Input Search String {}", keyword);
+        searchResultService.cleanSearchResponse();
         boolean isFoundInLocal = searchFilesOnLocalDrive(keyword);
 
         if(!isFoundInLocal){
             String uniqueID = UUID.randomUUID().toString();
             String uniqIdForSearch = "search"+uniqueID;
-            searchResultService.cleanSearchResponse();
+
             searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
             for (Node n: routeTable.getNeighbours()) {
                 requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);

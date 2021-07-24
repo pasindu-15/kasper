@@ -84,7 +84,7 @@ public class SocketServer{
                         reply = String.format("%04d %s", reply.length() + 5 ,reply);
                         DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
                         datagramSocket.send(dpReply);
-                        allreadyRepiled = true;
+
                         isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
 
                         boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
@@ -92,6 +92,7 @@ public class SocketServer{
                             reply = tmp[0];
                             reply = String.format("%04d %s", reply.length() + 5 ,reply);
                             searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
+                            allreadyRepiled = true;
                         } else if(isNewReq){
                             String requestIP = msgData[2];
                             int requestPort = Integer.parseInt(msgData[3]);
@@ -114,6 +115,7 @@ public class SocketServer{
                         break;
                     case "SEROK": //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                         searchResultService.addToSearchResult(msg);
+                        reply = "SEROKRECEIVED";
                         break;
                 }
                 if(!allreadyRepiled) {
