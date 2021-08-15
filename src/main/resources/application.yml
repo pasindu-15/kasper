@@ -10,7 +10,7 @@ bootstrap:
 log:
   identifierKey: UUID
 socket:
-  timeout: 20000
+  timeout: 5000
 
 node:
   req-protocol: "http://"

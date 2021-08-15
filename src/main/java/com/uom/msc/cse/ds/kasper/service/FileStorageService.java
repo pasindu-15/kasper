@@ -99,8 +99,6 @@ public class FileStorageService {
         }
     }
 
-
-
     public void updateRandomFilesFromLocal() {
 
         randomFileLst.clear();

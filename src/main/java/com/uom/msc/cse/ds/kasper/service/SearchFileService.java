@@ -17,31 +17,32 @@ import java.util.Set;
 @Log4j2
 public class SearchFileService {
 
-        @Autowired
-        RouteTable routeTable;
+    @Autowired
+    RouteTable routeTable;
 
-        @Autowired
-        FileStorageService fileStorage;
+    @Autowired
+    FileStorageService fileStorage;
 
-        @Autowired
-        YAMLConfig yamlConfig;
+    @Autowired
+    YAMLConfig yamlConfig;
+
+    @Autowired
+    SocketClient socketClient;
+
+    Set<String> hash_Set;
 
     public SearchFileService(Set<String> hash_Set) {
         this.hash_Set = hash_Set;
     }
 
-    @Autowired
-        SocketClient socketClient;
 
-        Set<String> hash_Set;
-
-        public boolean isNewRequest(String uniqId){
-            if(hash_Set.contains(uniqId)){
-                return false;
-            }
-            hash_Set.add(uniqId);
-            return true;
+    public boolean isNewRequest(String uniqId){
+        if(hash_Set.contains(uniqId)){
+            return false;
         }
+        hash_Set.add(uniqId);
+        return true;
+    }
 
     public List<String> searchFileInCurrentNode(String fileName) throws Exception {
 

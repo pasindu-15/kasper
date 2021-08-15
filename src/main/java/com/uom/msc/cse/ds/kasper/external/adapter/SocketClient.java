@@ -10,11 +10,9 @@ import java.util.concurrent.BlockingQueue;
 @Service
 public class SocketClient{
 
-
     DatagramSocket datagramSocket;
 
     YAMLConfig yamlConfig;
-
 
     SocketClient(YAMLConfig yamlConfig) throws SocketException {
         datagramSocket = new DatagramSocket();
@@ -22,13 +20,11 @@ public class SocketClient{
     }
 
 
-
-
     public String sendAndReceive(String targetIp, int targetPort, String request) throws IOException {
         DatagramPacket sendingPacket = new DatagramPacket(request.getBytes(),
                 request.length(), InetAddress.getByName(targetIp),targetPort);
 
-//        datagramSocket.setSoTimeout(yamlConfig.getTimeout());
+        datagramSocket.setSoTimeout(yamlConfig.getTimeout());
 
         datagramSocket.send(sendingPacket);
 

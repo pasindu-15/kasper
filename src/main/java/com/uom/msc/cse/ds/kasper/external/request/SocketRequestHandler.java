@@ -34,24 +34,19 @@ public class SocketRequestHandler implements RequestHandlerInterface {
     @Autowired
     SocketClient socketClient;
 
-
     @Autowired
     RestClient restClient;
 
     @Autowired
     FileStorageService fileStorageService;
 
-
     public List<InetSocketAddress> register(Node myNode){
 
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getRegMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),myNode.getUserName()).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(yamlConfig.getBSIPAddress(),yamlConfig.getBSPort(),msg);
-
             return  responseHandler.handleRegisterResponse(reply);
-
         }catch (Exception e){
             log.error("Failed to REG");
             e.printStackTrace();
@@ -60,15 +55,11 @@ public class SocketRequestHandler implements RequestHandlerInterface {
     }
 
     public boolean unRegister(Node myNode){
-
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getUnRegMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),myNode.getUserName()).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(yamlConfig.getBSIPAddress(),yamlConfig.getBSPort(),msg);
-
             return  responseHandler.handleUnregisterResponse(reply);
-
         }catch (Exception e){
             log.error("Failed to UNREG");
             e.printStackTrace();
@@ -76,37 +67,30 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         return false;
     }
 
-
     public boolean join(Node myNode,String targetIp, int targetPort){
 
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getJoinMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
-
             return responseHandler.handleJoinResponse(reply);
-//            System.out.println(reply);
         }catch (Exception e){
             log.error("Failed to JOIN");
             e.printStackTrace();
         }
         return false;
-
     }
     public boolean leave(Node myNode,String targetIp, int targetPort){
 
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getLeaveMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort()).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
             responseHandler.handleLeaveResponse(reply);
         }catch (Exception e){
             log.error("Failed to LEAVE");
         }
         return false;
-
     }
 
     @Override
@@ -144,7 +128,6 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         msg = String.format("%04d %s",msg.length() + 5,msg);
         log.info("search msg: {}", msg);
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
             FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
 
@@ -162,7 +145,6 @@ public class SocketRequestHandler implements RequestHandlerInterface {
     public boolean sendSearchData(String msg,String targetIp, int targetPort){
 
         try{
-//            String res = restClient.send(neighbourNode.getIpAddress(), Integer.toString(neighbourNode.getPort()),msg);
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
             FileSearchResponse fileSearchResponse = responseHandler.handleSearchResponse(reply);
 
@@ -185,11 +167,8 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         log.info("search msg: {}", msg);
         try{
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
-
-            log.info(reply.toString());
-
+            log.info(reply);
             return reply;
-
 
         }catch (Exception e){
             log.error("Failed to SEARCH");
@@ -197,9 +176,6 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         return null;
 
     }
-
-
-
 
 
 }

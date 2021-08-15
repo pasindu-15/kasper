@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 
+
 @Log4j2
 @RestController
 @RequestMapping("${base-url.context}")
@@ -38,37 +39,25 @@ public class UIController {
     @Autowired
     private ServletWebServerApplicationContext webServerAppCtxt;
 
-
-    @Autowired
-    RouteTable routeTable;
-
     @Autowired
     YAMLConfig yamlConfig;
 
     @Autowired
     SearchResultService searchResultService;
 
+    public static long RECEIVED_TIME_MILLS;
 
     @PostMapping("/searchFile")
+
     public FileSearchResponse searchFile(@RequestParam("fileName") String fileName) throws Exception {
         long startTime = System.currentTimeMillis();
         nodeHandlerService.doSearch(fileName, yamlConfig.getHops());
 
-//        do{
-//            if (!searchResultService.getFileSearchResponse().isEmpty()) {
-//                break;
-//            }
-//        }while ((System.currentTimeMillis()-startTime)<10000);
 
         long responseTime;
-        while (true){
-            responseTime = System.currentTimeMillis()-startTime;
-            if (searchResultService.getFileSearchResponse().size() > 0  || responseTime >20000 ) {
-                break;
-            }
-        }
 
-
+        Thread.sleep(3000);
+        responseTime = RECEIVED_TIME_MILLS-startTime;
         FileSearchResponse fr = searchResultService.getFileSearchResponse().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
 
 
@@ -80,9 +69,7 @@ public class UIController {
 
             return fr;
         }
-
         return null;
-
     }
 
     @PostMapping("/downloadFile")
@@ -94,7 +81,6 @@ public class UIController {
         return new SearchFileResponse(fileName, "", "");
 
     }
-
 
     @PostMapping("/uploadMultipleFiles")
     public ResponseEntity<String> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {

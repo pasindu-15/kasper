@@ -1,6 +1,7 @@
 package com.uom.msc.cse.ds.kasper.application.socket;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
+import com.uom.msc.cse.ds.kasper.application.controller.UIController;
 import com.uom.msc.cse.ds.kasper.service.RoutingTableService;
 import com.uom.msc.cse.ds.kasper.service.SearchFileService;
 import com.uom.msc.cse.ds.kasper.service.SearchResultService;
@@ -56,11 +57,9 @@ public class SocketServer{
                 byte[] data = incoming.getData();
                 String msg = new String(data, 0, incoming.getLength());
 
-
                 log.info("REQ RECEIVED : {}",msg);
 
-                log.info("CUMULATIVE REQ COUNT :{}",++reqCount);
-
+                System.err.println("CUMULATIVE REQ COUNT : "+ ++reqCount);
 
                 String[] msgData = msg.split(" ");
                 String command = msgData[1];
@@ -85,9 +84,10 @@ public class SocketServer{
                         DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
                         datagramSocket.send(dpReply);
 
+                        boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
                         isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
 
-                        boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
+
                         if(isNewReq && isSuccess) {
                             reply = tmp[0];
                             reply = String.format("%04d %s", reply.length() + 5 ,reply);
@@ -115,10 +115,11 @@ public class SocketServer{
                         break;
                     case "SEROK": //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
                         searchResultService.addToSearchResult(msg);
+
                         reply = "SEROKRECEIVED";
                         break;
                 }
-                if(!allreadyRepiled) {
+                 if(!allreadyRepiled) {
                     reply = String.format("%04d %s", reply.length() + 5, reply);
                     DatagramPacket dpReply = new DatagramPacket(reply.getBytes(), reply.getBytes().length, incoming.getAddress(), incoming.getPort());
                     datagramSocket.send(dpReply);

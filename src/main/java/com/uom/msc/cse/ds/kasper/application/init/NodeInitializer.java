@@ -1,12 +1,17 @@
 package com.uom.msc.cse.ds.kasper.application.init;
 
 
+import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.service.NodeHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.context.WebServerApplicationContext;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -24,5 +29,7 @@ public class NodeInitializer {
 
         nodeHandlerService.init(port);
     }
+
+
 
 }

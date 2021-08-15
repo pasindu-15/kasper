@@ -1,5 +1,6 @@
 package com.uom.msc.cse.ds.kasper.application.config;
 
+import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -58,4 +59,9 @@ public class AppConfig {
 
         return restTemplate;
     }
+
+//    @Bean("A")
+//    public List<FileSearchResponse> getFileSearchResponseList1(){
+//        return new ArrayList<>();
+//    }
 }
