@@ -5,17 +5,16 @@ import org.springframework.stereotype.Service;
 
 import java.net.*;
 import java.io.*;
-import java.util.concurrent.BlockingQueue;
 
 @Service
 public class SocketClient{
 
-    DatagramSocket datagramSocket;
+    private final DatagramSocket datagramSocket;
 
-    YAMLConfig yamlConfig;
+    private final YAMLConfig yamlConfig;
 
     SocketClient(YAMLConfig yamlConfig) throws SocketException {
-        datagramSocket = new DatagramSocket();
+        this.datagramSocket = new DatagramSocket();
         this.yamlConfig = yamlConfig;
     }
 

@@ -19,11 +19,11 @@ import java.util.UUID;
 @Service
 public class NodeHandlerService {
 
-    Node node;
-    RequestHandlerInterface requestHandler;
-    RouteTable routeTable;
+    private Node node;
+    private RequestHandlerInterface requestHandler;
+    private RouteTable routeTable;
 
-    SocketServer socketServer;
+    private SocketServer socketServer;
 
     @Autowired
     SearchFileService searchFileService;
@@ -47,7 +47,7 @@ public class NodeHandlerService {
      * @param myPort
      * @throws Exception
      */
-    public void init(int myPort) throws Exception {
+    public void init(int myPort){
 
         this.node = new Node(myPort);
         this.socketServer.init(myPort,node.getIpAddress());
@@ -60,7 +60,7 @@ public class NodeHandlerService {
      */
     private void addToOwnRouteTable(){
         List<Node> neighbours = new ArrayList<>();
-        List<InetSocketAddress> targets = targets = requestHandler.register(this.node);
+        List<InetSocketAddress> targets = requestHandler.register(this.node);
 
 
         if(targets != null) {
@@ -123,23 +123,9 @@ public class NodeHandlerService {
             for (Node n: routeTable.getNeighbours()) {
                 requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
 
-//            if(fr != null && fr.getFiles() != null){
-//                break;
-//            }
             }
         }
 
-//        String uniqueID = UUID.randomUUID().toString();
-//        String uniqIdForSearch = "search"+uniqueID;
-//        searchResultService.cleanSearchResponse();
-//        searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
-//        for (Node n: routeTable.getNeighbours()) {
-//            requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
-//
-////            if(fr != null && fr.getFiles() != null){
-////                break;
-////            }
-//        }
     }
 
 
@@ -147,9 +133,9 @@ public class NodeHandlerService {
         requestHandler.fileDownload(fileName,ip,Integer.parseInt(port));
     }
 
-    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
-        return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
-    }
+//    public String searchWithStringReply(String requestIp, int requestPort, String keyword,int hops, String targetIp, int targetPort) {
+//        return requestHandler.searchWithStringReply( requestIp,  requestPort,  keyword, hops,  targetIp,  targetPort);
+//    }
 
     private boolean searchFilesOnLocalDrive(String keyword){
         List<String> fileNames = null;

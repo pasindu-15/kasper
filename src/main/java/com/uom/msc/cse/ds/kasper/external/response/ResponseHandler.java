@@ -68,6 +68,8 @@ public class ResponseHandler {
 
     public boolean handleUnregisterResponse(String response){
 
+        System.out.println("UNROK :"+response);
+
         String[] msgData = response.split(" ");
 
         if (!UNROK.equals(msgData[1])) {

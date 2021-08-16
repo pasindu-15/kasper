@@ -1,7 +1,5 @@
 package com.uom.msc.cse.ds.kasper.service;
 
-
-import com.uom.msc.cse.ds.kasper.application.controller.UIController;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
 import lombok.Getter;
@@ -37,21 +35,17 @@ public class SearchResultService {
         this.setListening(true);
     }
 
-//    public synchronized boolean  addToSearchResult(String reply){
     public synchronized boolean  addToSearchResult(FileSearchResponse fileSearchResponse){
 
         while (!isListening) {
             try {
-                System.out.println("BFR");
                 wait();
-                System.out.println("AFT");
             } catch (InterruptedException e) {
                 log.error("addToSearchResult Failed {}",e.getMessage());
             }
         }
         isListening = false;
 
-        UIController.RECEIVED_TIME_MILLS = System.currentTimeMillis();
         log.error("Search File Response : "+fileSearchResponse.toString());
 
         this.fileSearchResponse.add(fileSearchResponse);

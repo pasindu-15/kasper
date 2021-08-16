@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class RoutingTableService {
 
     @Autowired
-    RouteTable routeTable;
+    private RouteTable routeTable;
 
     public boolean addToRouteTable(String ip, int port){
 
@@ -38,7 +38,6 @@ public class RoutingTableService {
 
         try {
             routeTable.getNeighbours().removeIf(n-> n.getIpAddress().equals(ip) && n.getPort() == port);
-//        routeTable.getNeighbours().parallelStream().filter(n -> !n.getIpAddress().equals(ip) || n.getPort() != port).collect(Collectors.toList());
 
         }catch (Exception e){
             return false;

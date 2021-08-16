@@ -45,7 +45,6 @@ public class UIController {
     @Autowired
     SearchResultService searchResultService;
 
-    public static long RECEIVED_TIME_MILLS;
 
     @PostMapping("/searchFile")
 
@@ -53,14 +52,9 @@ public class UIController {
         long startTime = System.currentTimeMillis();
         nodeHandlerService.doSearch(fileName, yamlConfig.getHops());
 
-
-        long responseTime;
-
-//        Thread.sleep(3000);
-
         FileSearchResponse fr = searchResultService.receivedFileSearch().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
 
-        responseTime = System.currentTimeMillis()-startTime;
+        long responseTime = System.currentTimeMillis()-startTime;
         log.info("SEARCH RESPONSE : {}",searchResultService.getFileSearchResponse());
         log.info("SEARCH RESPONSE TIME : {}",responseTime);
 
@@ -85,7 +79,6 @@ public class UIController {
     @PostMapping("/uploadMultipleFiles")
     public ResponseEntity<String> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
 
-        String status;
         try {
             Arrays.asList(files)
                     .parallelStream()

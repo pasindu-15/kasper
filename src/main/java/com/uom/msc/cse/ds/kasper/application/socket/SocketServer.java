@@ -1,7 +1,6 @@
 package com.uom.msc.cse.ds.kasper.application.socket;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
-import com.uom.msc.cse.ds.kasper.application.controller.UIController;
 import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
 import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
 import com.uom.msc.cse.ds.kasper.service.RoutingTableService;
@@ -42,14 +41,11 @@ public class SocketServer{
     private static int reqCount = 0;
 
 
-
     @Async("threadPoolExecutor")
     public void init(int port, String ip) {
         try {
             this. datagramSocket = new DatagramSocket(port,InetAddress.getByName(ip));
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
 
@@ -64,11 +60,11 @@ public class SocketServer{
 
                 log.info("REQ RECEIVED : {}",msg);
 
-                System.err.println("CUMULATIVE REQ COUNT : "+ ++reqCount);
+                log.info("CUMULATIVE REQ COUNT : "+ ++reqCount);
 
                 String[] msgData = msg.split(" ");
                 String command = msgData[1];
-                boolean allreadyRepiled = false;
+                boolean alreadyReplied = false;
                 String reply = "";
                 boolean isSuccess;
                 switch (command){
@@ -82,78 +78,42 @@ public class SocketServer{
                         break;
                     case "SER": //search: "SER {ip} {port} {file name} {hops}"
                         //SearchFileService searchFileService; //= new SearchFileService();
-                        String[] tmp = new String[1]; tmp[0] = "";
-                        String uniqIdForSearch = msgData[6];
-                        reply = "SERNOTIFY";
-                        reply = String.format("%04d %s", reply.length() + 5 ,reply);
-                        DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
-                        datagramSocket.send(dpReply);
 
-                        boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
+//                        reply = "SERNOTIFY";
+//                        reply = String.format("%04d %s", reply.length() + 5 ,reply);
+//                        DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
+//                        datagramSocket.send(dpReply);
+
+                        boolean isNewReq =  searchFileService.isNewRequest(msgData[6]);
 //                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
+
                         if(isNewReq) {
-                            System.out.println("New req");
-                            boolean isFoundInCurrentNode = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
-                            if(isFoundInCurrentNode){
-                                System.out.println("Current node :"+tmp);
-                                reply = tmp[0];
-                                reply = String.format("%04d %s", reply.length() + 5 ,reply);
-                                searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
-                                allreadyRepiled = true;
+
+                            String searchResultFromCurrentNode = searchFileService.searchFileInCurrentNode(msgData[4],port, ip, Integer.parseInt(msgData[5]));
+                            if(searchResultFromCurrentNode != null){
+
+                                searchFileService.sendSearchData(searchResultFromCurrentNode, msgData[2], Integer.parseInt(msgData[3]));
+                                alreadyReplied = true;
                             }else{
-                                String requestIP = msgData[2];
-                                int requestPort = Integer.parseInt(msgData[3]);
-                                String fileName = msgData[4];
-                                int hops = Integer.parseInt(msgData[5]) - 1;
-                                String searchUniqId = msgData[6];
-                                String incomingIp;
-                                int incomingPort;
-                                try {
-                                    incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
-                                    incomingPort = incoming.getPort();
-                                    reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
-                                } catch (UnknownHostException e) {
-                                    log.error("Getting address failed");
-                                    throw new RuntimeException("Getting address failed");
-                                }
+
+                                searchFileService.forwardSearchRequest(msgData[2],
+                                        Integer.parseInt(msgData[3]),
+                                        msgData[4],
+                                        Integer.parseInt(msgData[5]) - 1,
+                                        msgData[6],
+                                        incoming.getAddress().getHostAddress(),
+                                        incoming.getPort());
+
                             }
 
-                        }else {
-                            reply = "Stopped Recursive";
                         }
 
                         break;
 
-//                        if(isNewReq && isSuccess) {
-//                            reply = tmp[0];
-//                            reply = String.format("%04d %s", reply.length() + 5 ,reply);
-//                            searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
-//                            allreadyRepiled = true;
-//                        } else if(isNewReq){
-//                            String requestIP = msgData[2];
-//                            int requestPort = Integer.parseInt(msgData[3]);
-//                            String fileName = msgData[4];
-//                            int hops = Integer.parseInt(msgData[5]) - 1;
-//                            String searchUniqId = msgData[6];
-//                            String incomingIp;
-//                            int incomingPort;
-//                            try {
-//                                incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
-//                                incomingPort = incoming.getPort();
-//                                reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
-//                            } catch (UnknownHostException e) {
-//                                log.error("Getting address failed");
-//                                throw new RuntimeException("Getting address failed");
-//                            }
-//                        } else{
-//                            reply = "Stopped Recursive";
-//                        }
-//                        break;
                     case "SEROK": //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
 
-
                         FileSearchResponse fileSearchResponseTmp = this.responseHandler.handleSearchResponse(msg);
-                        System.out.println(fileSearchResponseTmp.toString());
+
                         if(searchResultService.getFileSearchResponse().isEmpty()){
                             searchResultService.addToSearchResult(fileSearchResponseTmp);
                         }
@@ -161,17 +121,16 @@ public class SocketServer{
                         reply = "SEROKRECEIVED";
                         break;
                 }
-                 if(!allreadyRepiled) {
+                 if(!alreadyReplied) {
                     reply = String.format("%04d %s", reply.length() + 5, reply);
                     DatagramPacket dpReply = new DatagramPacket(reply.getBytes(), reply.getBytes().length, incoming.getAddress(), incoming.getPort());
                     datagramSocket.send(dpReply);
                 }
 
             }
-        }catch (IOException ex){
-            System.err.println("Socket Server IOException " + ex);
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception ex){
+
+            log.error("Socket Server Exception ", ex);
         }
 
     }
