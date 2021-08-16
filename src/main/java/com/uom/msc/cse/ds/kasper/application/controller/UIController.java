@@ -56,11 +56,11 @@ public class UIController {
 
         long responseTime;
 
-        Thread.sleep(3000);
-        responseTime = RECEIVED_TIME_MILLS-startTime;
-        FileSearchResponse fr = searchResultService.getFileSearchResponse().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
+//        Thread.sleep(3000);
 
+        FileSearchResponse fr = searchResultService.receivedFileSearch().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
 
+        responseTime = System.currentTimeMillis()-startTime;
         log.info("SEARCH RESPONSE : {}",searchResultService.getFileSearchResponse());
         log.info("SEARCH RESPONSE TIME : {}",responseTime);
 

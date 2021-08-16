@@ -2,6 +2,8 @@ package com.uom.msc.cse.ds.kasper.application.socket;
 
 import com.uom.msc.cse.ds.kasper.application.config.YAMLConfig;
 import com.uom.msc.cse.ds.kasper.application.controller.UIController;
+import com.uom.msc.cse.ds.kasper.dto.FileSearchResponse;
+import com.uom.msc.cse.ds.kasper.external.response.ResponseHandler;
 import com.uom.msc.cse.ds.kasper.service.RoutingTableService;
 import com.uom.msc.cse.ds.kasper.service.SearchFileService;
 import com.uom.msc.cse.ds.kasper.service.SearchResultService;
@@ -33,6 +35,9 @@ public class SocketServer{
 
     @Autowired
     SearchResultService searchResultService;
+
+    @Autowired
+    ResponseHandler responseHandler;
 
     private static int reqCount = 0;
 
@@ -85,36 +90,73 @@ public class SocketServer{
                         datagramSocket.send(dpReply);
 
                         boolean isNewReq =  searchFileService.isNewRequest(uniqIdForSearch);
-                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
-
-
-                        if(isNewReq && isSuccess) {
-                            reply = tmp[0];
-                            reply = String.format("%04d %s", reply.length() + 5 ,reply);
-                            searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
-                            allreadyRepiled = true;
-                        } else if(isNewReq){
-                            String requestIP = msgData[2];
-                            int requestPort = Integer.parseInt(msgData[3]);
-                            String fileName = msgData[4];
-                            int hops = Integer.parseInt(msgData[5]) - 1;
-                            String searchUniqId = msgData[6];
-                            String incomingIp;
-                            int incomingPort;
-                            try {
-                                incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
-                                incomingPort = incoming.getPort();
-                                reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
-                            } catch (UnknownHostException e) {
-                                log.error("Getting address failed");
-                                throw new RuntimeException("Getting address failed");
+//                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
+                        if(isNewReq) {
+                            System.out.println("New req");
+                            boolean isFoundInCurrentNode = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));
+                            if(isFoundInCurrentNode){
+                                System.out.println("Current node :"+tmp);
+                                reply = tmp[0];
+                                reply = String.format("%04d %s", reply.length() + 5 ,reply);
+                                searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
+                                allreadyRepiled = true;
+                            }else{
+                                String requestIP = msgData[2];
+                                int requestPort = Integer.parseInt(msgData[3]);
+                                String fileName = msgData[4];
+                                int hops = Integer.parseInt(msgData[5]) - 1;
+                                String searchUniqId = msgData[6];
+                                String incomingIp;
+                                int incomingPort;
+                                try {
+                                    incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
+                                    incomingPort = incoming.getPort();
+                                    reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
+                                } catch (UnknownHostException e) {
+                                    log.error("Getting address failed");
+                                    throw new RuntimeException("Getting address failed");
+                                }
                             }
-                        } else{
+
+                        }else {
                             reply = "Stopped Recursive";
                         }
+
                         break;
+
+//                        if(isNewReq && isSuccess) {
+//                            reply = tmp[0];
+//                            reply = String.format("%04d %s", reply.length() + 5 ,reply);
+//                            searchFileService.sendSearchData(reply, msgData[2], Integer.parseInt(msgData[3]));
+//                            allreadyRepiled = true;
+//                        } else if(isNewReq){
+//                            String requestIP = msgData[2];
+//                            int requestPort = Integer.parseInt(msgData[3]);
+//                            String fileName = msgData[4];
+//                            int hops = Integer.parseInt(msgData[5]) - 1;
+//                            String searchUniqId = msgData[6];
+//                            String incomingIp;
+//                            int incomingPort;
+//                            try {
+//                                incomingIp =  incoming.getAddress().getLocalHost().getHostAddress();
+//                                incomingPort = incoming.getPort();
+//                                reply = searchFileService.recursiveSearchCall(requestIP, requestPort, fileName, hops, searchUniqId, incomingIp, incomingPort);
+//                            } catch (UnknownHostException e) {
+//                                log.error("Getting address failed");
+//                                throw new RuntimeException("Getting address failed");
+//                            }
+//                        } else{
+//                            reply = "Stopped Recursive";
+//                        }
+//                        break;
                     case "SEROK": //search-reply: "SEROK {No of Files} {ip} {port} {hops} {file names}"
-                        searchResultService.addToSearchResult(msg);
+
+
+                        FileSearchResponse fileSearchResponseTmp = this.responseHandler.handleSearchResponse(msg);
+                        System.out.println(fileSearchResponseTmp.toString());
+                        if(searchResultService.getFileSearchResponse().isEmpty()){
+                            searchResultService.addToSearchResult(fileSearchResponseTmp);
+                        }
 
                         reply = "SEROKRECEIVED";
                         break;

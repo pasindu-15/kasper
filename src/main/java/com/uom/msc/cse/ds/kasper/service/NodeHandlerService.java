@@ -118,6 +118,8 @@ public class NodeHandlerService {
             String uniqIdForSearch = "search"+uniqueID;
 
             searchFileService.isNewRequest(uniqIdForSearch); //If Own request Received Ignore
+
+
             for (Node n: routeTable.getNeighbours()) {
                 requestHandler.search(this.node,keyword,hops,n.getIpAddress(),n.getPort(),uniqIdForSearch);
 
@@ -159,9 +161,9 @@ public class NodeHandlerService {
                 fr.setIp(getMyNode().getIpAddress());
                 fr.setPort(getMyNode().getPort());
                 fr.setFiles(fileNames);
-                List<FileSearchResponse> searchResponses = new ArrayList<>();
-                searchResponses.add(fr);
-                searchResultService.setFileSearchResponse(searchResponses);
+
+
+                searchResultService.addToSearchResult(fr);
                 return true;
             }
         } catch (Exception e) {
