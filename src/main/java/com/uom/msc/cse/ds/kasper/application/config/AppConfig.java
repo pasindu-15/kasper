@@ -14,6 +14,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,8 +62,5 @@ public class AppConfig {
         return restTemplate;
     }
 
-//    @Bean("A")
-//    public List<FileSearchResponse> getFileSearchResponseList1(){
-//        return new ArrayList<>();
-//    }
+
 }

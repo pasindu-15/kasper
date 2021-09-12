@@ -13,8 +13,8 @@ public class ResponseHandler {
 
     private static final String REGOK = "REGOK";
     private static final String UNROK = "UNROK";
-    private static final String JOIN = "JOINOK";
-    private static final String LEAVE = "LEAVEOK";
+    private static final String JOINOK = "JOINOK";
+    private static final String LEAVEOK = "LEAVEOK";
     private static final String SEROK = "SEROK";
 
     public List<InetSocketAddress> handleRegisterResponse(String response){
@@ -96,8 +96,8 @@ public class ResponseHandler {
 
         String[] msgData = response.split(" ");
 
-        if (!JOIN.equals(msgData[1])) {
-            throw new IllegalStateException(JOIN + " not received");
+        if (!JOINOK.equals(msgData[1])) {
+            throw new IllegalStateException(JOINOK + " not received");
         }
 
         int code = Integer.parseInt(msgData[2]);
@@ -117,10 +117,12 @@ public class ResponseHandler {
 
     public boolean handleLeaveResponse(String response){
 
+        System.out.println("LEAVEOK :"+response);
+
         String[] msgData = response.split(" ");
 
-        if (!LEAVE.equals(msgData[1])) {
-            throw new IllegalStateException(LEAVE + " not received");
+        if (!LEAVEOK.equals(msgData[1])) {
+            throw new IllegalStateException(LEAVEOK + " not received");
         }
 
         int code = Integer.parseInt(msgData[2]);

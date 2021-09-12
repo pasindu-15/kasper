@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,8 @@ public class UIController {
     @Autowired
     private FileStorageService fileStorageService;
 
-    @Autowired
-    private ServletWebServerApplicationContext webServerAppCtxt;
+//    @Autowired
+//    private ServletWebServerApplicationContext webServerAppCtxt;
 
     @Autowired
     YAMLConfig yamlConfig;
@@ -48,8 +49,9 @@ public class UIController {
 
     @PostMapping("/searchFile")
 
-    public FileSearchResponse searchFile(@RequestParam("fileName") String fileName) throws Exception {
+    public ResponseEntity<FileSearchResponse> searchFile(@RequestParam("fileName") String fileName) throws Exception {
         long startTime = System.currentTimeMillis();
+        log.info("SEARCH STARTS...");
         nodeHandlerService.doSearch(fileName, yamlConfig.getHops());
 
         FileSearchResponse fr = searchResultService.receivedFileSearch().isEmpty()?null:searchResultService.getFileSearchResponse().get(0);
@@ -61,9 +63,9 @@ public class UIController {
         if (fr != null) {
             log.info("Search Result : {}", fr.getFiles().toString());
 
-            return fr;
+            return new ResponseEntity<FileSearchResponse>(fr,HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<FileSearchResponse>(new FileSearchResponse(),HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/downloadFile")

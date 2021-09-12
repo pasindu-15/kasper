@@ -58,7 +58,8 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         String msg = UriComponentsBuilder.fromPath(yamlConfig.getUnRegMsg()).buildAndExpand(myNode.getIpAddress(),myNode.getPort(),myNode.getUserName()).toString();
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
-            String reply = socketClient.sendAndReceive(yamlConfig.getBSIPAddress(),yamlConfig.getBSPort(),msg);
+            String reply = socketClient.sendAndReceiveBssServer(yamlConfig.getBSIPAddress(),yamlConfig.getBSPort(),msg);
+            System.out.println("A:"+reply);
             return  responseHandler.handleUnregisterResponse(reply);
         }catch (Exception e){
             log.error("Failed to UNREG");
@@ -86,6 +87,7 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         msg = String.format("%04d %s",msg.length() + 5,msg);
         try{
             String reply = socketClient.sendAndReceive(targetIp,targetPort,msg);
+            System.out.println("B:" + reply);
             responseHandler.handleLeaveResponse(reply);
         }catch (Exception e){
             log.error("Failed to LEAVE");
@@ -176,6 +178,8 @@ public class SocketRequestHandler implements RequestHandlerInterface {
         return null;
 
     }
+
+
 
 
 }

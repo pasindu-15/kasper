@@ -79,10 +79,10 @@ public class SocketServer{
                     case "SER": //search: "SER {ip} {port} {file name} {hops}"
                         //SearchFileService searchFileService; //= new SearchFileService();
 
-//                        reply = "SERNOTIFY";
-//                        reply = String.format("%04d %s", reply.length() + 5 ,reply);
-//                        DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
-//                        datagramSocket.send(dpReply);
+                        reply = "SERNOTIFY";
+                        reply = String.format("%04d %s", reply.length() + 5 ,reply);
+                        DatagramPacket dpReply = new DatagramPacket(reply.getBytes() , reply.getBytes().length , incoming.getAddress() , incoming.getPort());
+                        datagramSocket.send(dpReply);
 
                         boolean isNewReq =  searchFileService.isNewRequest(msgData[6]);
 //                        isSuccess = searchFileService.searchFileInCurrentNode(msgData[4], tmp, port, ip, Integer.parseInt(msgData[5]));

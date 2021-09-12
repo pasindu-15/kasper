@@ -103,24 +103,24 @@ public class FileStorageService {
 
         randomFileLst.clear();
         List<String> fileList =  Stream.of(new File(yamlConfig.getUploadDir()).listFiles())
-                .filter(file -> !file.isDirectory())
+                .filter(file ->!file.isDirectory() )
                 .map(File::getName)
                 .collect(Collectors.toList());
 
         log.info("DEFAULT FILES : {}",fileList.toString());
 
-//        Random rnd = new Random();
-//
-//        List<String> list = new ArrayList<String>(fileList);
-//        Collections.shuffle(list);
-//        list = list.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
-////        int desiredFileCount = rnd.nextInt(2)+3;
-//        int desiredFileCount = 3;
-//        int subLstFileCount = Integer.min(desiredFileCount,list.size());
-//        List<String> fileNames =  list.subList(0, subLstFileCount);
-//        fileNames.parallelStream().forEach(f -> randomFileLst.add(f));
-//        fileList.parallelStream().forEach(f -> randomFileLst.add(f));
-        randomFileLst = fileList;
+        Random rnd = new Random();
+        List<String> list = new ArrayList<String>(fileList);
+
+        Collections.shuffle(list);
+
+        list = list.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
+
+        int desiredFileCount = rnd.nextInt(3)+3;
+
+        int subLstFileCount = Integer.min(desiredFileCount,list.size());
+        randomFileLst =  list.subList(0, subLstFileCount);
+
 
         log.info("Local Drive Updated {} ",randomFileLst.toString());
 

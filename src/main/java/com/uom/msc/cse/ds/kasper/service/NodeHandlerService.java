@@ -73,7 +73,7 @@ public class NodeHandlerService {
 
             }
             routeTable.setNeighbours(neighbours);
-            System.out.println(routeTable.getNeighbours().toString());
+//            System.out.println(routeTable.getNeighbours().toString());
         }
     }
 

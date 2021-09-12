@@ -41,7 +41,8 @@ function searchFile(file) {
             searchFileSuccess.style.display = "block";
             downloadFileForm.style.display = "block";
         } else {
-            searchFileSuccess.style.display = "none";
+            searchFileSuccess.innerHTML = "<p>File Not Found!</p>";
+            searchFileSuccess.style.display = "block";
             downloadFileForm.style.display = "none";
             searchFileError.innerHTML = (response && response.message) || "Some Error Occurred";
         }

@@ -62,6 +62,8 @@ public class SearchResultService {
             try {
                 wait(1000);
 
+                break;
+
             } catch (InterruptedException e) {
                 log.error("receivedFileSearch Failed {}",e.getMessage());
             }
